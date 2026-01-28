@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # 1. Orchestrator Service (The FastAPI App)
+  orchestrator:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file: .env
+    environment:
+      - QDRANT_HOST=qdrant
+      - LLM_BASE_URL=http://llm-service:11434
+      - OLLAMA_HOST=http://llm-service:11434
+      - EMBEDDING_API_URL=http://embedding-service:8080/embed
+      - EMBEDDING_STRATEGY=remote # Set to local if you want to run BGE inside this container
+    depends_on:
+      - qdrant
+      - embedding-service
+      - llm-service
+
+  # 2. Vector DB Service
+  qdrant:
+    image: qdrant/qdrant:latest
+    ports:
+      - "6333:6333"
+    volumes:
+      - qdrant_storage:/qdrant/storage
+    restart: always
+
+  # 3. Embedding Service (BGE)
+  # Example using Hugging Face Text Embeddings Inference (TEI)
+  embedding-service:
+    image: ghcr.io/huggingface/text-embeddings-inference:cpu-latest
+    ports:
+      - "8081:80"
+    command: --model-id BAAI/bge-small-en-v1.5
+    restart: always
+
+  # 4. LLM Service (Gemma)
+  # Running Ollama as a separate container
+  llm-service:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_storage:/root/.ollama
+    # Note: You would need to run 'docker exec' to pull the gemma model 
+    # unless you use a custom Dockerfile to bake it in.
+    restart: always
+
+volumes:
+  qdrant_storage:
+  ollama_storage:
