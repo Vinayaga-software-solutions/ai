@@ -42,8 +42,10 @@ class VectorDB:
         )
 
     def search(self, query_vector: List[float], limit: int = 3):
-        return self.client.search(
+        # Using query_points (introduced in v1.10) which is more robust
+        response = self.client.query_points(
             collection_name=self.collection_name,
-            query_vector=query_vector,
+            query=query_vector,
             limit=limit
         )
+        return response.points

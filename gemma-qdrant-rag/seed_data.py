@@ -1,7 +1,8 @@
+import os
 import requests
 import time
 
-BASE_URL = "http://localhost:8000"
+BASE_URL = os.getenv("API_URL", "http://localhost:8000")
 
 def init_db():
     sample_data = [

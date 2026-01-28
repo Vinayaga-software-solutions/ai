@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     # Use 'local' to keep using fastembed, or 'remote' to call an external API
     EMBEDDING_STRATEGY: str = "local" 
     EMBEDDING_MODEL: str = "BAAI/bge-small-en-v1.5"
-    EMBEDDING_API_URL: Optional[str] = "http://embedding-service:8080/embed"
+    EMBEDDING_API_URL: Optional[str] = "http://embedding-service:80/embed"
     EMBEDDING_DIM: int = 384
 
     # --- Vector DB (Qdrant) ---

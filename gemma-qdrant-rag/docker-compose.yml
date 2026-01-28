@@ -11,7 +11,7 @@ services:
       - QDRANT_HOST=qdrant
       - LLM_BASE_URL=http://llm-service:11434
       - OLLAMA_HOST=http://llm-service:11434
-      - EMBEDDING_API_URL=http://embedding-service:8080/embed
+      - EMBEDDING_API_URL=http://embedding-service:80/embed
       - EMBEDDING_STRATEGY=remote # Set to local if you want to run BGE inside this container
     depends_on:
       - qdrant
@@ -37,16 +37,24 @@ services:
     restart: always
 
   # 4. LLM Service (Gemma)
-  # Running Ollama as a separate container
   llm-service:
     image: ollama/ollama:latest
     ports:
       - "11434:11434"
     volumes:
       - ollama_storage:/root/.ollama
-    # Note: You would need to run 'docker exec' to pull the gemma model 
-    # unless you use a custom Dockerfile to bake it in.
+      - ./ollama-entrypoint.sh:/ollama-entrypoint.sh
+    entrypoint: /bin/sh /ollama-entrypoint.sh
     restart: always
+
+  # 5. Data Seeder (Automated local setup)
+  seeder:
+    build: .
+    environment:
+      - API_URL=http://orchestrator:8000
+    depends_on:
+      - orchestrator
+    command: python seed_data.py
 
 volumes:
   qdrant_storage:
