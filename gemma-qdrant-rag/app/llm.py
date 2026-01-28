@@ -14,12 +14,23 @@ class GemmaLLM:
             )
 
     def generate(self, prompt: str, context: str = "") -> str:
+        from datetime import datetime
+        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        
         full_prompt = f"""
-        Context information is below.
+        You are a helpful AI assistant. 
+        Current Time: {current_time}
+        
+        Context information (if any):
         ---------------------
         {context}
         ---------------------
-        Given the context information and not prior knowledge, answer the query.
+        
+        Task:
+        1. Use the provided context to answer the query if the information is present there.
+        2. If the context does not contain the answer, use your own internal knowledge to provide a helpful response.
+        3. If the user asks for the time, use the "Current Time" provided above.
+        
         Query: {prompt}
         Answer:
         """
