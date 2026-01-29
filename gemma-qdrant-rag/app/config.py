@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     # --- LLM Service (Gemma) ---
     # Can point to a local Ollama service or a Cloud/vLLM endpoint
     LLM_PROVIDER: str = "ollama"  # "ollama" or "openai_compatible"
-    LLM_MODEL: str = "gemma:2b"
+    LLM_MODEL: str = "gemma3:4b"
     LLM_API_KEY: Optional[str] = None
     LLM_BASE_URL: Optional[str] = "http://llm-service:11434" # Internal docker name
     OLLAMA_HOST: str = "http://llm-service:11434"
@@ -26,6 +26,15 @@ class Settings(BaseSettings):
     QDRANT_API_KEY: Optional[str] = None
     QDRANT_PATH: Optional[str] = None
     QDRANT_COLLECTION: str = "rag_collection"
+
+    # --- RAG Specific Settings ---
+    RAG_THRESHOLD: float = 0.6
+    RAG_TOP_K: int = 5
+
+    # --- LLM Generation Settings ---
+    LLM_MAX_TOKENS: int = 512
+    LLM_TEMPERATURE: float = 0.7
+    LLM_TOP_P: float = 0.9
 
     class Config:
         env_file = ".env"

@@ -1,10 +1,10 @@
 SAMPLE_DATA = [
     "NovaStream AI was founded in 2021 by Sarah Jenkins and David Chen.",
     "NovaStream's flagship product is 'Nebula-1', a high-performance transformer model optimized for edge devices.",
-    "The company is headquartered in San Francisco, California.",
-    "Nebula-1 supports 128 different languages and has a context window of 32k tokens.",
+    "NovaStream AI is headquartered in San Francisco, California.",
+    "NovaStream's Nebula-1 model supports 128 different languages and has a context window of 32k tokens.",
     "NovaStream's pricing starts at $49/month for the Pro tier, which includes 1 million tokens.",
-    "The Enterprise tier offers dedicated hardware and 24/7 technical support.",
+    "The NovaStream Enterprise tier offers dedicated hardware and 24/7 technical support.",
     "NovaStream maintains a strict data privacy policy: no user training data is stored for more than 30 days.",
     "The 'Starlight' API is NovaStream's primary interface for integrating Nebula-1 into external applications.",
     "In 2023, NovaStream partnered with GlobalConnect to expand its infrastructure into Europe and Asia.",

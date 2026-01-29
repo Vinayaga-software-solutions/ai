@@ -13,6 +13,9 @@ services:
       - OLLAMA_HOST=http://llm-service:11434
       - EMBEDDING_API_URL=http://embedding-service:80/embed
       - EMBEDDING_STRATEGY=remote # Set to local if you want to run BGE inside this container
+    volumes:
+      - .:/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     depends_on:
       - qdrant
       - embedding-service

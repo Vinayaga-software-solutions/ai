@@ -41,11 +41,12 @@ class VectorDB:
             )
         )
 
-    def search(self, query_vector: List[float], limit: int = 3):
-        # Using query_points (introduced in v1.10) which is more robust
+    def search(self, query_vector: List[float], limit: int = 3, score_threshold: float = 0.75):
+        # Search Vector DB with score threshold
         response = self.client.query_points(
             collection_name=self.collection_name,
             query=query_vector,
-            limit=limit
+            limit=limit,
+            score_threshold=score_threshold
         )
         return response.points

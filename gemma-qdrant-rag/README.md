@@ -57,8 +57,23 @@ The system is split into independent services to ensure high performance, scalab
 
 ---
 
-## 🛠️ Configuration (The Orchestrator)
-You can tune the system behavior by editing the `.env` file:
-- `EMBEDDING_STRATEGY`: Set to `remote` to use the TEI service (fastest) or `local` for zero-dependency runs.
-- `LLM_MODEL`: Change this to `gemma:7b` (if your hardware supports it) or any other Ollama-supported model.
-- `QDRANT_HOST`: Points to the vector database address.
+### 🛠️ Development (Hot Reload)
+To enable fast development without rebuilding containers:
+1.  **Mount Code**: The `docker-compose.yml` is now configured to mount your local `./app` directory into the container.
+2.  **Auto-Reload**: The Orchestrator uses `uvicorn --reload`. Simply save a file in `/app` and the service will restart instantly inside the container.
+
+---
+
+## 🛠️ Configuration
+You can tune the system behavior by editing the `.env` file or mapping environment variables:
+
+| Variable | Default | Description |
+| :--- | :--- | :--- |
+| `LLM_MODEL` | `gemma:2b` | The model name (e.g., `llama3`, `phi3`) |
+| `RAG_THRESHOLD` | `0.75` | Minimum similarity score (0.0 to 1.0) |
+| `RAG_TOP_K` | `3` | Number of context chunks to retrieve |
+| `LLM_MAX_TOKENS`| `512` | Max tokens for generation |
+| `LLM_TEMPERATURE`| `0.7` | Randomness of response |
+| `LLM_TOP_P` | `0.9` | Diversity of response |
+| `EMBEDDING_STRATEGY`| `remote` | `local` (fastembed) or `remote` (TEI) |
+

@@ -10,8 +10,8 @@ until ollama list > /dev/null 2>&1; do
 done
 
 # Pull the model
-echo "Pulling Gemma 2B model..."
-ollama pull gemma:2b
+echo "Pulling Gemma 3 model..."
+ollama pull gemma3:4b
 
 # Keep the container running by bringing the background process to foreground
 wait
