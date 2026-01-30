@@ -1,0 +1,94 @@
+Sample Document for Testing Ingestion Pipeline
+
+Introduction
+This is a sample document created to test the ingestion pipeline for the Private AI Governance System. The document contains multiple sections with varying content to ensure proper chunking and embedding generation.
+
+Section 1: Overview of RAG Systems
+Retrieval-Augmented Generation (RAG) is a powerful technique that combines the benefits of large language models with external knowledge retrieval. By grounding AI responses in specific data sources, RAG systems can provide more accurate, verifiable, and trustworthy answers.
+
+The key components of a RAG system include:
+1. Data ingestion and preprocessing
+2. Text chunking and segmentation
+3. Embedding generation
+4. Vector storage and indexing
+5. Similarity search and retrieval
+6. Context assembly
+7. LLM-based generation
+8. Post-processing and validation
+
+Section 2: Importance of Chunking
+Proper chunking is critical for RAG system performance. Chunks that are too small may lack sufficient context, while chunks that are too large can introduce noise and reduce retrieval precision. The optimal chunk size typically ranges from 400 to 600 tokens, with some overlap between consecutive chunks to maintain semantic continuity.
+
+Chunking strategies should consider:
+- Document structure (sections, paragraphs, sentences)
+- Semantic boundaries
+- Token count constraints
+- Overlap requirements
+- Metadata preservation
+
+Section 3: Embedding Models
+Embedding models convert text into dense vector representations that capture semantic meaning. BGE (BAAI General Embedding) models are particularly effective for retrieval tasks, offering a good balance between quality and computational efficiency.
+
+Key considerations for embedding models:
+- Dimensionality (typically 384-1024 dimensions)
+- Training data and domain coverage
+- Inference speed
+- Consistency between indexing and query embeddings
+- Support for different languages
+
+Section 4: Vector Databases
+Vector databases like Qdrant provide efficient storage and retrieval of high-dimensional embeddings. They support similarity search operations using distance metrics such as cosine similarity, Euclidean distance, or dot product.
+
+Important features of vector databases:
+- Scalability to millions or billions of vectors
+- Fast approximate nearest neighbor search
+- Metadata filtering capabilities
+- Persistence and backup options
+- API accessibility and client libraries
+
+Section 5: Metadata and Governance
+Metadata is essential for governance, auditability, and explainability in AI systems. Each chunk should be accompanied by rich metadata including:
+- Document ID and source
+- Timestamp of ingestion
+- Chunk index and position
+- File information (name, path, size)
+- Custom tags and categories
+- Version information
+- Access control attributes
+
+This metadata enables:
+- Traceability of AI responses
+- Filtering and scoping of retrieval
+- Audit trails for compliance
+- Version control and updates
+- Permission-based access
+
+Section 6: Hallucination Defense
+Preventing hallucinations is a critical challenge in AI systems. Effective defense mechanisms include:
+
+1. Retrieval confidence thresholds - Only answer when similarity scores are sufficiently high
+2. Citation requirements - Force the model to cite sources for each claim
+3. Context sufficiency checks - Verify that retrieved context contains relevant information
+4. Answer validation - Use a second pass to verify claims against context
+5. Refusal discipline - Normalize "I don't know" responses
+6. Deterministic rules - Use hard rules for factual queries when possible
+
+Section 7: Future Enhancements
+The ingestion pipeline can be extended to support additional file formats:
+- PDF documents with text extraction
+- JSON structured data
+- CSV and tabular data
+- Images with OCR
+- Audio transcriptions
+- Video content analysis
+
+Advanced features to consider:
+- Incremental updates and versioning
+- Deduplication and conflict resolution
+- Multi-language support
+- Domain-specific preprocessing
+- Quality scoring and filtering
+- Automated summarization
+
+Conclusion
+This sample document demonstrates the type of content that the ingestion pipeline should handle effectively. By processing this document, we can verify that text extraction, chunking, embedding generation, and storage all work correctly with proper metadata preservation.

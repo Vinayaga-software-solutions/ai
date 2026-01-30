@@ -77,3 +77,35 @@ You can tune the system behavior by editing the `.env` file or mapping environme
 | `LLM_TOP_P` | `0.9` | Diversity of response |
 | `EMBEDDING_STRATEGY`| `remote` | `local` (fastembed) or `remote` (TEI) |
 
+---
+
+## 🚀 Ingestion CLI (Local Run)
+
+You can run the ingestion tool locally while connecting to the Docker services (Qdrant & Embeddings).
+
+### 1. Prerequisites
+- Python 3.10+
+- `pip install -r requirements.txt`
+
+### 2. Run Ingestion
+This connects to Qdrant (port 6333) and Embedding Service (port 8081) running in Docker.
+
+**PowerShell:**
+```powershell
+$env:QDRANT_HOST="localhost"; $env:QDRANT_PORT="6333"; $env:EMBEDDING_STRATEGY="remote"; $env:EMBEDDING_API_URL="http://localhost:8081/embed"; python ingest_cli.py --file sample_document.txt
+```
+
+**Bash:**
+```bash
+export QDRANT_HOST="localhost"
+export QDRANT_PORT="6333"
+export EMBEDDING_STRATEGY="remote"
+export EMBEDDING_API_URL="http://localhost:8081/embed"
+python ingest_cli.py --file sample_document.txt
+```
+
+### 3. Verify Retrieval
+```bash
+python test_rag_api.py
+```
+

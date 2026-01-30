@@ -9,9 +9,10 @@ until ollama list > /dev/null 2>&1; do
   sleep 2
 done
 
-# Pull the model
-echo "Pulling Gemma 3 model..."
-ollama pull gemma3:4b
+# Pull the model defined in environment or default to gemma2:2b
+MODEL=${LLM_MODEL:-gemma2:2b}
+echo "Pulling model: $MODEL..."
+ollama pull $MODEL
 
-# Keep the container running by bringing the background process to foreground
+# Keep the container running
 wait

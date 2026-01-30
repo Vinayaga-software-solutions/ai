@@ -70,7 +70,7 @@ async def query_rag(request: QueryRequest):
         
         return {
             "answer": answer,
-            "sources": [r.payload for r in results]
+            "sources": [{**r.payload, "score": r.score} for r in results]
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

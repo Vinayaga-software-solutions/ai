@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     # --- LLM Service (Gemma) ---
     # Can point to a local Ollama service or a Cloud/vLLM endpoint
     LLM_PROVIDER: str = "ollama"  # "ollama" or "openai_compatible"
-    LLM_MODEL: str = "gemma3:4b"
+    LLM_MODEL: str = "gemma:2b"
     LLM_API_KEY: Optional[str] = None
     LLM_BASE_URL: Optional[str] = "http://llm-service:11434" # Internal docker name
     OLLAMA_HOST: str = "http://llm-service:11434"
