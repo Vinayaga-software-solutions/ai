@@ -25,6 +25,13 @@ Invoke-RestMethod -Uri "http://localhost:8000/query" -Method Post -ContentType "
 Invoke-RestMethod -Uri "http://localhost:8000/ingest" -Method Post -ContentType "application/json" -Body '{"text": "Antigravity is a specialized AI coding assistant.", "metadata": {"source": "manual"}}'
 ```
 
+**Clear Qdrant memory (delete all ingested documents):**
+```powershell
+Invoke-RestMethod -Uri "http://localhost:8000/memory" -Method Delete
+```
+*Bash/curl:* `curl -X DELETE http://localhost:8000/memory`  
+*On success you get `{"status": "ok", "message": "Qdrant memory cleared."}`. The collection is recreated empty and ready for new ingestion.*
+
 ---
 
 ## 🏗️ Architecture Overview
@@ -42,7 +49,7 @@ The system is split into independent services to ensure high performance, scalab
 ## 📂 Project Structure & Component Details
 
 ### Core Application (`/app`)
-- **`main.py`**: The FastAPI application setup. Defines the `/query`, `/ingest`, and `/health` endpoints. It acts as the "Controller" in the MVC pattern.
+- **`main.py`**: The FastAPI application setup. Defines the `/query`, `/ingest`, `DELETE /memory` (clear Qdrant), and `/health` endpoints. It acts as the "Controller" in the MVC pattern.
 - **`vector_store.py`**: A wrapper around the `qdrant-client`. It manages collection creation and abstraction of the `query_points` API.
 - **`llm.py`**: Handles communication with the LLM provider. It supports both local Ollama and OpenAI-compatible APIs (like Groq or vLLM).
 - **`embeddings.py`**: Manages how text is turned into vectors. It supports a "local" mode (running inside the orchestrator) or "remote" mode (calling the dedicated embedding service).
@@ -106,6 +113,6 @@ python ingest_cli.py --file sample_document.txt
 
 ### 3. Verify Retrieval
 ```bash
-python test_rag_api.py
+python tests/test_rag_api.py
 ```
 

@@ -75,6 +75,15 @@ async def query_rag(request: QueryRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.delete("/memory")
+async def clear_memory():
+    """Clear the full Qdrant vector store (all ingested documents)."""
+    try:
+        db.clear()
+        return {"status": "ok", "message": "Qdrant memory cleared."}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.get("/health")
 async def health():
     return {"status": "ok"}

@@ -50,3 +50,8 @@ class VectorDB:
             score_threshold=score_threshold
         )
         return response.points
+
+    def clear(self) -> None:
+        """Delete all points in the collection by recreating it with the same config."""
+        self.client.delete_collection(self.collection_name)
+        self._ensure_collection()
