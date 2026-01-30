@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 """
-Simple Test Ingestion Pipeline (without embeddings)
-Tests the core ingestion logic without requiring fastembed
+Test Ingestion Pipeline
+Comprehensive test script for the ingestion pipeline
 """
 import sys
+import os
 from pathlib import Path
 
 # Add parent directory to path for imports
-sys.path.insert(0, str(Path(__file__).parent))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
+from app.ingestion_pipeline import IngestionPipeline
 from app.text_extractor import TextExtractor, TextCleaner
 from app.chunker import TextChunker, DocumentChunker
 import logging
@@ -30,14 +32,14 @@ def test_text_extraction():
     extractor = TextExtractor()
     
     # Test with sample document
-    result = extractor.extract("sample_document.txt")
+    data_path = os.path.join(os.path.dirname(__file__), '../data/sample_document.txt')
+    result = extractor.extract(data_path)
     
     if result["success"]:
         logger.info(f"✅ Extraction successful")
         logger.info(f"   Characters extracted: {len(result['text'])}")
         logger.info(f"   Filename: {result['metadata']['filename']}")
         logger.info(f"   File size: {result['metadata']['file_size_bytes']} bytes")
-        logger.info(f"   First 100 chars: {result['text'][:100]}...")
         return True
     else:
         logger.error(f"❌ Extraction failed: {result.get('error')}")
@@ -56,8 +58,6 @@ def test_text_cleaning():
     messy_text = "  This   has   extra    spaces\n\n\n\nAnd multiple newlines  \n\r\nMixed line endings"
     cleaned = cleaner.clean(messy_text)
     
-    logger.info(f"Original: '{messy_text}'")
-    logger.info(f"Cleaned: '{cleaned}'")
     logger.info(f"Original length: {len(messy_text)}")
     logger.info(f"Cleaned length: {len(cleaned)}")
     logger.info(f"✅ Text cleaning successful")
@@ -89,7 +89,6 @@ def test_chunking():
     logger.info(f"   Total chunks created: {len(chunks)}")
     for i, chunk in enumerate(chunks[:3]):  # Show first 3 chunks
         logger.info(f"   Chunk {i}: {chunk['token_count']} tokens, {len(chunk['text'])} chars")
-        logger.info(f"      Preview: {chunk['text'][:80]}...")
     
     return True
 
@@ -115,73 +114,96 @@ def test_document_chunking():
     logger.info(f"   Total chunks: {len(chunks)}")
     logger.info(f"   First chunk ID: {chunks[0]['chunk_id']}")
     logger.info(f"   Metadata keys: {list(chunks[0].keys())}")
-    logger.info(f"   Sample metadata:")
-    for key in ['doc_id', 'source', 'chunk_index', 'total_chunks', 'token_count']:
-        logger.info(f"      {key}: {chunks[0].get(key)}")
     
     return True
 
 
-def test_full_extraction_and_chunking():
-    """Test extraction + chunking pipeline."""
+def test_full_pipeline():
+    """Test the complete ingestion pipeline."""
     logger.info("\n" + "=" * 60)
-    logger.info("TEST 5: Full Extraction + Chunking Pipeline")
+    logger.info("TEST 5: Full Ingestion Pipeline")
     logger.info("=" * 60)
     
     try:
-        # Extract
-        extractor = TextExtractor()
-        result = extractor.extract("sample_document.txt")
+        pipeline = IngestionPipeline()
         
-        if not result["success"]:
-            logger.error(f"❌ Extraction failed: {result['error']}")
-            return False
-        
-        # Clean
-        cleaner = TextCleaner()
-        cleaned_text = cleaner.clean(result["text"])
-        
-        # Chunk
-        doc_chunker = DocumentChunker()
-        chunks = doc_chunker.chunk_document(
-            text=cleaned_text,
+        # Test with sample document
+        result = pipeline.ingest_file(
+            file_path=os.path.join(os.path.dirname(__file__), '../data/sample_document.txt'),
             doc_id="sample_doc_001",
-            source="sample_document.txt",
-            metadata={
+            source="test_ingestion",
+            additional_metadata={
                 "category": "documentation",
-                "test_run": True,
-                **result["metadata"]
+                "test_run": True
             }
         )
         
-        logger.info(f"✅ Full pipeline successful")
-        logger.info(f"   Original file: sample_document.txt")
-        logger.info(f"   Characters extracted: {len(result['text'])}")
-        logger.info(f"   Characters after cleaning: {len(cleaned_text)}")
-        logger.info(f"   Chunks created: {len(chunks)}")
-        logger.info(f"   Chunk IDs:")
-        for i, chunk in enumerate(chunks[:5]):
-            logger.info(f"      {i+1}. {chunk['chunk_id']} ({chunk['token_count']} tokens)")
-        if len(chunks) > 5:
-            logger.info(f"      ... and {len(chunks) - 5} more chunks")
-        
-        return True
+        if result["success"]:
+            logger.info(f"✅ Full pipeline successful")
+            logger.info(f"   Document ID: {result['doc_id']}")
+            logger.info(f"   Chunks created: {result['chunks_created']}")
+            logger.info(f"   Total characters: {result['total_characters']}")
+            logger.info(f"   First 3 chunk IDs:")
+            for chunk_id in result['chunk_ids'][:3]:
+                logger.info(f"      - {chunk_id}")
+            return True
+        else:
+            logger.error(f"❌ Pipeline failed: {result['error']}")
+            return False
             
     except Exception as e:
         logger.error(f"❌ Pipeline error: {e}", exc_info=True)
         return False
 
 
+def test_text_ingestion():
+    """Test direct text ingestion."""
+    logger.info("\n" + "=" * 60)
+    logger.info("TEST 6: Direct Text Ingestion")
+    logger.info("=" * 60)
+    
+    try:
+        pipeline = IngestionPipeline()
+        
+        sample_text = """
+        This is a test of direct text ingestion. The pipeline should be able to process
+        raw text without requiring a file. This is useful for ingesting content from APIs,
+        databases, or user input. The text should be cleaned, chunked, embedded, and stored
+        with appropriate metadata.
+        """ * 10  # Repeat to ensure multiple chunks
+        
+        result = pipeline.ingest_text(
+            text=sample_text,
+            doc_id="direct_text_001",
+            source="api_test",
+            additional_metadata={"type": "direct_input"}
+        )
+        
+        if result["success"]:
+            logger.info(f"✅ Direct text ingestion successful")
+            logger.info(f"   Document ID: {result['doc_id']}")
+            logger.info(f"   Chunks created: {result['chunks_created']}")
+            return True
+        else:
+            logger.error(f"❌ Text ingestion failed: {result['error']}")
+            return False
+            
+    except Exception as e:
+        logger.error(f"❌ Text ingestion error: {e}", exc_info=True)
+        return False
+
+
 def main():
     """Run all tests."""
-    logger.info("\n" + "🚀 Starting Ingestion Pipeline Tests (Core Components)" + "\n")
+    logger.info("\n" + "🚀 Starting Ingestion Pipeline Tests" + "\n")
     
     tests = [
         ("Text Extraction", test_text_extraction),
         ("Text Cleaning", test_text_cleaning),
         ("Text Chunking", test_chunking),
         ("Document Chunking", test_document_chunking),
-        ("Full Extraction + Chunking", test_full_extraction_and_chunking),
+        ("Full Pipeline", test_full_pipeline),
+        ("Direct Text Ingestion", test_text_ingestion),
     ]
     
     results = []
@@ -209,9 +231,6 @@ def main():
     
     if passed == total:
         logger.info("\n🎉 All tests passed!")
-        logger.info("\nNote: Full pipeline with embeddings and Qdrant storage")
-        logger.info("      requires fastembed and qdrant-client to be installed.")
-        logger.info("      Run inside Docker container for full functionality.")
         return 0
     else:
         logger.warning(f"\n⚠️  {total - passed} test(s) failed")

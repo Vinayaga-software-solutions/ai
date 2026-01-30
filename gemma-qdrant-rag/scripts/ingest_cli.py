@@ -7,9 +7,10 @@ import argparse
 import sys
 import logging
 from pathlib import Path
+import os
 
-# Add parent directory to path for imports
-sys.path.insert(0, str(Path(__file__).parent))
+# Add the parent directory to sys.path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from app.ingestion_pipeline import IngestionPipeline
 from app.text_extractor import TextExtractor

@@ -47,7 +47,7 @@ services:
       - "11434:11434"
     volumes:
       - ollama_storage:/root/.ollama
-      - ./ollama-entrypoint.sh:/ollama-entrypoint.sh
+      - ./scripts/ollama-entrypoint.sh:/ollama-entrypoint.sh
     entrypoint: /bin/sh /ollama-entrypoint.sh
     restart: always
 
@@ -58,7 +58,7 @@ services:
       - API_URL=http://orchestrator:8000
     depends_on:
       - orchestrator
-    command: python seed_data.py
+    command: python scripts/seed_data.py
 
 volumes:
   qdrant_storage:

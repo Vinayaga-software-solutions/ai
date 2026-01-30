@@ -92,7 +92,7 @@ This connects to Qdrant (port 6333) and Embedding Service (port 8081) running in
 
 **PowerShell:**
 ```powershell
-$env:QDRANT_HOST="localhost"; $env:QDRANT_PORT="6333"; $env:EMBEDDING_STRATEGY="remote"; $env:EMBEDDING_API_URL="http://localhost:8081/embed"; python ingest_cli.py --file sample_document.txt
+$env:QDRANT_HOST="localhost"; $env:QDRANT_PORT="6333"; $env:EMBEDDING_STRATEGY="remote"; $env:EMBEDDING_API_URL="http://localhost:8081/embed"; python scripts/ingest_cli.py --file "data/sample_document.txt"
 ```
 
 **Bash:**
