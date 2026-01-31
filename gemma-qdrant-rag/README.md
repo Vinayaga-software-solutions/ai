@@ -4,13 +4,25 @@ A professional, microservice-oriented Retrieval-Augmented Generation (RAG) syste
 
 ## 🚀 Quick Start (Docker)
 
-The fastest way to get started is using Docker Compose, which orchestrates all 4 microservices plus an automated data seeder.
+The fastest way to get started is using Docker Compose, which orchestrates the Orchestrator, Vector DB (Qdrant), Embedding Service, LLM, and several new lightweight placeholder services (ingestion, chunking, retrieval, auth, gateway) plus an automated data seeder. All services are now part of the same `docker-compose.yml` so a single command will start or stop everything together.
 
 ### 1. Build and Run
 ```powershell
-docker-compose up --build
+# Start all services (or stop them with CTRL+C or `docker compose down`)
+docker compose up --build
 ```
 *Note: The first run will take a few minutes as it downloads the Gemma model (approx 2GB) and embedding weights.*
+
+During `docker compose up --build` a one-shot smoke test runs automatically (service `smoke`) which polls all service `/health` endpoints and validates readiness (*including the original services like Qdrant / LLM / Embedding*). If the smoke test fails it will exit non-zero and the smoke container will show the logs with details for quick troubleshooting.
+
+**New skeleton services:**
+- `ingestion` — port `8010` (placeholder)
+- `chunking` — port `8011` (placeholder)
+- `retrieval` — port `8012` (placeholder)
+- `auth` — port `8013` (placeholder)
+- `gateway` — port `8005` (placeholder)
+
+These are minimal FastAPI skeletons (health endpoints and placeholders) intended to be expanded as you implement your features.
 
 ### 2. Test the API
 Once the logs show `Uvicorn running on http://0.0.0.0:8000`, open a new terminal and run:

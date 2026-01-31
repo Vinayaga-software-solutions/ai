@@ -56,8 +56,83 @@ services:
       - API_URL=http://orchestrator:8000
     depends_on:
       - orchestrator
+    volumes:
+      - seeder_state:/state
     command: python scripts/seed_data.py
+
+  # 6. Ingestion Service (skeleton)
+  ingestion:
+    build: ./services/ingestion
+    ports:
+      - "8010:80"
+    env_file: .env.services
+    restart: always
+    depends_on:
+      - qdrant
+
+  # 7. Chunking Service (skeleton)
+  chunking:
+    build: ./services/chunking
+    ports:
+      - "8011:80"
+    env_file: .env.services
+    restart: always
+    depends_on:
+      - ingestion
+
+  # 8. Retrieval Service (skeleton)
+  retrieval:
+    build: ./services/retrieval
+    ports:
+      - "8012:80"
+    env_file: .env.services
+    restart: always
+    depends_on:
+      - qdrant
+      - embedding-service
+
+  # 9. Auth Service (skeleton)
+  auth:
+    build: ./services/auth
+    ports:
+      - "8013:80"
+    env_file: .env.services
+    restart: always
+
+  # 10. Gateway (skeleton)
+  gateway:
+    build: ./services/gateway
+    ports:
+      - "8005:80"
+    env_file: .env.services
+    restart: always
+    depends_on:
+      - orchestrator
+      - auth
+      - retrieval
+
+  # 11. Smoke Test (one-shot)
+  smoke:
+    image: python:3.11-slim
+    volumes:
+      - ./scripts:/scripts:ro
+      - seeder_state:/state
+    env_file: .env.services
+    depends_on:
+      - orchestrator
+      - qdrant
+      - embedding-service
+      - llm-service
+      - ingestion
+      - chunking
+      - retrieval
+      - auth
+      - gateway
+      - seeder
+    entrypoint: /bin/sh -c "pip install --no-cache-dir requests && python /scripts/smoke_test.py"
+    restart: 'no'
 
 volumes:
   qdrant_storage:
   ollama_storage:
+  seeder_state:

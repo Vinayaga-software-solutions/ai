@@ -22,49 +22,58 @@
 
 ## Data Flow Architecture
 
-### 1. Data Ingestion
+### 1. Data Ingestion(Ingestion Service)
 - **Types:** PDFs, DBs, APIs, files, emails, etc.
 - **Frequency:** Configurable per data source
 
-### 2. Pre-processing
+### 2. Pre-processing(Chuking Service)
 ```
 Filter → Clean data → Add metadata (source, date, tags)
 ```
 
-### 3. Chunking
+### 3. Summary generator(Chuking Service)
+- Used for now for Table based content
+- Create a summary based on raw data
+- Send to chunker
+
+### 4. Chunking(Chuking Service)
 ```
-Split into smaller chunks → Add metadata (source, date, tags)
+Split into smaller chunks → Add metadata (source, date, tags) -> store chunking
 ```
 
-### 4. Embedding Generation
+### 5. Embedding Generation and storage(Embedding Service)
 - Convert each chunk into vector embeddings using an embedding model
 - Consistency: Use same model for both storage and retrieval
-
-### 5. Storage (Vector DB + Metadata Store)
 - Store embeddings in vector database (Qdrant, Pinecone, FAISS)
 - Accompany with rich metadata
 
-### 6. User Query → Embedding
+### 6. User Query → Embedding(Retrieval Service)
 - Convert incoming user question into embedding
 - **Critical:** Use the same embedding model as storage
 
-### 7. Retrieval
+### 7. Retrieval(Retrieval Service)
 - Perform similarity search in vector DB
 - Fetch top-K relevant chunks
 
-### 8. Context Assembly
+### 8. Context Assembly(Retrieval Service)
 - Combine retrieved chunks + system rules + user prompt
 - Create final context for LLM
 
-### 9. LLM Generation
+### 9. LLM Generation(Retrieval Service)
 - Send context to language model
 - Generate grounded response
 
-### 10. Post-Processing (Optional)
+### 10. Post-Processing (Retrieval Service)
 - Format output
 - Apply guardrails
 - Logging and auditing
 - Citation generation
+
+### 11. Authentication Service(Auth Service)
+- For authentication , account creation, org creation 
+
+### 12. Orchestration Service(Orchestration Service)
+- Orchestation everything
 
 ### TODO Items
 - **Confidence Decay (Versioning):** Implement time-based confidence decay
