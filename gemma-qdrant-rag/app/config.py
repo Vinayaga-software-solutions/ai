@@ -27,6 +27,13 @@ class Settings(BaseSettings):
     QDRANT_PATH: Optional[str] = None
     QDRANT_COLLECTION: str = "rag_collection"
 
+    # --- Document Storage (ingest-cli) ---
+    # Use 'local' for dev (saves to folder) or 'gcs' for prod (saves to Google Cloud Storage)
+    STORAGE_BACKEND: str = "local"
+    LOCAL_STORAGE_PATH: str = "./storage/documents"
+    GCS_BUCKET_NAME: Optional[str] = None
+    GCS_CREDENTIALS_PATH: Optional[str] = None  # Optional; uses default credentials if unset
+
     # --- RAG Specific Settings ---
     RAG_THRESHOLD: float = 0.6
     RAG_TOP_K: int = 5

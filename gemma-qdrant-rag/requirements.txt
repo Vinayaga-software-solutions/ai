@@ -10,3 +10,4 @@ openai
 python-dotenv
 requests
 tiktoken
+google-cloud-storage

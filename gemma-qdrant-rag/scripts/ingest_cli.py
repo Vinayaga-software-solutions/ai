@@ -17,6 +17,7 @@ from app.text_extractor import TextExtractor
 from app.chunker import DocumentChunker
 from app.embeddings import BGEEmbeddings
 from app.vector_store import VectorDB
+from app.document_storage import get_document_storage
 
 # Configure logging
 logging.basicConfig(
@@ -27,19 +28,24 @@ logger = logging.getLogger(__name__)
 
 
 def ingest_file(file_path: str, doc_id: str = None, source: str = None):
-    """Ingest a single file."""
+    """Ingest a single file and save it to configured storage (local folder or GCS)."""
     logger.info(f"Initializing ingestion pipeline...")
-    
     pipeline = IngestionPipeline()
-    
+    storage = get_document_storage()
+
     logger.info(f"Ingesting file: {file_path}")
     result = pipeline.ingest_file(
         file_path=file_path,
         doc_id=doc_id,
         source=source
     )
-    
+
     if result["success"]:
+        try:
+            saved_path = storage.save_file(file_path, result["doc_id"])
+            logger.info(f"Document saved to storage: {saved_path}")
+        except Exception as e:
+            logger.warning(f"Storage save failed (ingestion succeeded): {e}")
         logger.info("✅ Ingestion successful!")
         logger.info(f"Document ID: {result['doc_id']}")
         logger.info(f"Source: {result['source']}")
@@ -52,19 +58,25 @@ def ingest_file(file_path: str, doc_id: str = None, source: str = None):
 
 
 def ingest_text(text: str, doc_id: str = None, source: str = "cli"):
-    """Ingest raw text."""
+    """Ingest raw text and save it to configured storage (local folder or GCS)."""
     logger.info(f"Initializing ingestion pipeline...")
-    
     pipeline = IngestionPipeline()
-    
+    storage = get_document_storage()
+
     logger.info(f"Ingesting text ({len(text)} characters)...")
     result = pipeline.ingest_text(
         text=text,
         doc_id=doc_id,
         source=source
     )
-    
+
     if result["success"]:
+        try:
+            filename = f"doc_{result['doc_id']}.txt"
+            saved_path = storage.save_content(text.encode("utf-8"), filename, result["doc_id"])
+            logger.info(f"Document saved to storage: {saved_path}")
+        except Exception as e:
+            logger.warning(f"Storage save failed (ingestion succeeded): {e}")
         logger.info("✅ Ingestion successful!")
         logger.info(f"Document ID: {result['doc_id']}")
         logger.info(f"Chunks created: {result['chunks_created']}")
@@ -75,24 +87,31 @@ def ingest_text(text: str, doc_id: str = None, source: str = "cli"):
 
 
 def ingest_batch(file_paths: list):
-    """Ingest multiple files."""
+    """Ingest multiple files and save each to configured storage (local folder or GCS)."""
     logger.info(f"Initializing ingestion pipeline...")
-    
     pipeline = IngestionPipeline()
-    
+    storage = get_document_storage()
+
     logger.info(f"Ingesting {len(file_paths)} files...")
     result = pipeline.ingest_batch(file_paths)
-    
+
+    for i, r in enumerate(result["results"]):
+        if r.get("success") and i < len(file_paths):
+            try:
+                saved_path = storage.save_file(file_paths[i], r.get("doc_id"))
+                logger.info(f"Saved to storage: {saved_path}")
+            except Exception as e:
+                logger.warning(f"Storage save failed for {file_paths[i]}: {e}")
+
     logger.info(f"✅ Batch ingestion complete!")
     logger.info(f"Total files: {result['total_files']}")
     logger.info(f"Successful: {result['successful']}")
     logger.info(f"Failed: {result['failed']}")
-    
-    # Show details for failed files
-    if result['failed'] > 0:
+
+    if result["failed"] > 0:
         logger.warning("Failed files:")
-        for r in result['results']:
-            if not r['success']:
+        for r in result["results"]:
+            if not r["success"]:
                 logger.warning(f"  - {r.get('doc_id', 'unknown')}: {r.get('error', 'unknown error')}")
 
 

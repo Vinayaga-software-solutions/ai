@@ -1,34 +1,62 @@
 # RAG Test Suite
 
-This directory contains a comprehensive test suite for the Gemma-Qdrant RAG service.
+Automated unit and integration tests for the Gemma-Qdrant RAG service.  
+**Run all commands from the project root** (`gemma-qdrant-rag/`). Install dependencies first: `pip install -r requirements.txt`.
 
-## 📋 Test Case Coverage
+---
 
-The suite includes **20 test cases** across three categories:
+## One command: all unit tests (no services)
 
-1.  **10 Answerable Questions**: Questions based on information about "NovaStream AI" (sample data provided in the suite).
-2.  **5 Refusal Questions**: Scenarios where the model should ideally refuse to answer (malicious queries, private data, or out-of-scope requests).
-3.  **5 Edge Cases**: Stress tests including empty strings, special characters, long queries, and multilingual input.
-
-## 🚀 How to Run
-
-### 1. Start the RAG Service
-Ensure your Docker containers are running:
 ```powershell
-docker-compose up --build
+python tests/run_unit_tests.py
 ```
 
-### 2. Install Test Dependencies
-Since tests run locally, install the required library:
+Runs ingestion pipeline and document storage tests. No API, Qdrant, or LLM required.
+
+---
+
+## One command: all integration tests (API must be up)
+
 ```powershell
-python -m pip install -r requirements.txt
+python tests/run_integration_tests.py
 ```
 
-### 3. Run the Tests
-Once the service is healthy, run the test script:
-```powershell
-python run_tests.py
-```
+Waits for `http://localhost:8000`, then runs the full suite (ingest sample data + answerable/refusal/edge questions). Results in `tests/test_results.json`. Start the API first (e.g. `docker-compose up -d` or `uvicorn app.main:app --port 8000`).
 
-## 📊 Viewing Results
-The script will output progress to the console and save a detailed report to `tests/test_results.json`.
+---
+
+## Individual tests
+
+| What to test | Command | Prerequisites |
+| :--- | :--- | :--- |
+| **All unit tests** | `python tests/run_unit_tests.py` | None |
+| **All integration tests** | `python tests/run_integration_tests.py` | API at `http://localhost:8000` |
+| **RAG API** (query smoke) | `python tests/test_rag_api.py` | API running |
+| **Full integration** (ingest + Q&A) | `cd tests; python run_tests.py` | API running |
+| **Ingestion pipeline** | `python tests/test_ingestion_simple.py` | None |
+| **Document storage** | `python tests/test_document_storage.py` | None |
+
+---
+
+## Test case coverage
+
+### Unit (no services)
+- **`test_ingestion_simple.py`**: Extract, clean, chunk pipeline (no Qdrant/embeddings).
+- **`test_document_storage.py`**: Local save/copy, directory creation, GCS config (local vs gcs). Uses a temp dir; no GCS credentials needed.
+
+### Integration (API running)
+- **`run_tests.py`**: Ingest sample data, then ~20 cases — answerable, refusal, and edge questions; writes `test_results.json`.
+- **`test_rag_api.py`**: Smoke test — sends questions to `/query` and prints answers/sources.
+
+### Question categories (in `run_tests.py`)
+1. **Answerable**: Based on sample data (e.g. NovaStream AI).
+2. **Refusal**: Malicious, private, or out-of-scope requests.
+3. **Edge**: Empty strings, special characters, long queries, multilingual input.
+
+---
+
+## Prerequisites and results
+
+1. **Start the API** (for integration tests): `docker-compose up -d` or `uvicorn app.main:app --port 8000`.
+2. **Install deps**: From project root, `pip install -r requirements.txt`.
+3. **Results**: Integration suite writes `tests/test_results.json`.

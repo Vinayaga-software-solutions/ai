@@ -15,22 +15,61 @@ docker-compose up --build
 ### 2. Test the API
 Once the logs show `Uvicorn running on http://0.0.0.0:8000`, open a new terminal and run:
 
-**Search for information:**
+**Ask your own question (PowerShell — full response: answer + sources):**
 ```powershell
-Invoke-RestMethod -Uri "http://localhost:8000/query" -Method Post -ContentType "application/json" -Body '{"question": "What is Gemma?"}'
+$r = Invoke-RestMethod -Uri "http://localhost:8000/query" -Method Post -ContentType "application/json" -Body '{"question": "What is Gemma?"}'
+$r | ConvertTo-Json -Depth 10
 ```
+*Use `ConvertTo-Json -Depth 10` so the full answer and all source chunks print without truncation.*
 
-**Ingest new data:**
+**Just the answer text:**
 ```powershell
-Invoke-RestMethod -Uri "http://localhost:8000/ingest" -Method Post -ContentType "application/json" -Body '{"text": "Antigravity is a specialized AI coding assistant.", "metadata": {"source": "manual"}}'
+(Invoke-RestMethod -Uri "http://localhost:8000/query" -Method Post -ContentType "application/json" -Body '{"question": "What is Gemma?"}').answer
 ```
+*Bash:* `curl -X POST http://localhost:8000/query -H "Content-Type: application/json" -d '{"question": "What is Gemma?"}'`
 
-**Clear Qdrant memory (delete all ingested documents):**
+**Ingest your own text:**
+```powershell
+Invoke-RestMethod -Uri "http://localhost:8000/ingest" -Method Post -ContentType "application/json" -Body '{"text": "Your content here.", "metadata": {"source": "manual"}}'
+```
+*Bash:* `curl -X POST http://localhost:8000/ingest -H "Content-Type: application/json" -d '{"text": "Your content here."}'`
+
+**Clear Qdrant (delete all ingested documents):**
 ```powershell
 Invoke-RestMethod -Uri "http://localhost:8000/memory" -Method Delete
 ```
-*Bash/curl:* `curl -X DELETE http://localhost:8000/memory`  
-*On success you get `{"status": "ok", "message": "Qdrant memory cleared."}`. The collection is recreated empty and ready for new ingestion.*
+*Bash:* `curl -X DELETE http://localhost:8000/memory`  
+*On success: `{"status": "ok", "message": "Qdrant memory cleared."}` — collection is recreated empty.*
+
+For **automated unit and integration tests**, see [tests/README.md](tests/README.md).
+
+---
+
+## 🖥️ Run Manually (Command Line)
+
+Run the app without Docker from the project root. You need Qdrant, an embedding source, and an LLM (e.g. Ollama) available.
+
+### 1. Prerequisites
+- Python 3.10+
+- Qdrant running (e.g. `docker run -p 6333:6333 qdrant/qdrant`) or use a remote URL
+- Embeddings: either local (fastembed) or a remote embedding API
+- LLM: Ollama with `gemma:2b` or an OpenAI-compatible API (set `LLM_BASE_URL` / `LLM_API_KEY` in `.env`)
+
+### 2. Install and configure
+```powershell
+cd gemma-qdrant-rag
+pip install -r requirements.txt
+copy .env.example .env
+# Edit .env: QDRANT_HOST, QDRANT_PORT, EMBEDDING_STRATEGY, LLM_BASE_URL, etc.
+```
+
+### 3. Start the API
+```powershell
+uvicorn app.main:app --host 0.0.0.0 --port 8000
+```
+*Bash:* `uvicorn app.main:app --host 0.0.0.0 --port 8000`
+
+Once you see `Uvicorn running on http://0.0.0.0:8000`, use the same **Test the API** and **Ingestion CLI** commands as with Docker (e.g. `Invoke-RestMethod`, `python scripts/ingest_cli.py`, etc.).
 
 ---
 
@@ -86,33 +125,33 @@ You can tune the system behavior by editing the `.env` file or mapping environme
 
 ---
 
-## 🚀 Ingestion CLI (Local Run)
+## 🚀 Ingestion CLI (manual: your own document)
 
-You can run the ingestion tool locally while connecting to the Docker services (Qdrant & Embeddings).
+Ingest **your own files or text** from the command line (works with Docker or a manually started API). Connects to Qdrant and the embedding service.
 
-### 1. Prerequisites
-- Python 3.10+
-- `pip install -r requirements.txt`
+### Prerequisites
+- Python 3.10+, `pip install -r requirements.txt`
+- API (and Qdrant/embedding) running — e.g. Docker or `uvicorn app.main:app --port 8000`
 
-### 2. Run Ingestion
-This connects to Qdrant (port 6333) and Embedding Service (port 8081) running in Docker.
-
-**PowerShell:**
+### Ingest a file
+**PowerShell (Docker):**
 ```powershell
-$env:QDRANT_HOST="localhost"; $env:QDRANT_PORT="6333"; $env:EMBEDDING_STRATEGY="remote"; $env:EMBEDDING_API_URL="http://localhost:8081/embed"; python scripts/ingest_cli.py --file "data/sample_document.txt"
+$env:QDRANT_HOST="localhost"; $env:QDRANT_PORT="6333"; $env:EMBEDDING_STRATEGY="remote"; $env:EMBEDDING_API_URL="http://localhost:8081/embed"
+python scripts/ingest_cli.py --file "data/sample_document.txt"
 ```
 
 **Bash:**
 ```bash
-export QDRANT_HOST="localhost"
-export QDRANT_PORT="6333"
-export EMBEDDING_STRATEGY="remote"
-export EMBEDDING_API_URL="http://localhost:8081/embed"
-python ingest_cli.py --file sample_document.txt
+export QDRANT_HOST=localhost QDRANT_PORT=6333
+export EMBEDDING_STRATEGY=remote EMBEDDING_API_URL="http://localhost:8081/embed"
+python scripts/ingest_cli.py --file data/sample_document.txt
 ```
 
-### 3. Verify Retrieval
-```bash
-python tests/test_rag_api.py
+### Ingest raw text
+```powershell
+python scripts/ingest_cli.py --text "Your own content here."
 ```
+
+### Document storage (local vs GCS)
+In `.env`: **Local** — `STORAGE_BACKEND=local`, `LOCAL_STORAGE_PATH=./storage/documents`. **GCS** — `STORAGE_BACKEND=gcs`, `GCS_BUCKET_NAME=your-bucket-name`. Ingested content is saved to the configured backend after successful ingestion.
 
