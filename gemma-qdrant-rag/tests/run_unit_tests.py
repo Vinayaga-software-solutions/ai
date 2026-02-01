@@ -15,6 +15,10 @@ sys.path.insert(0, ROOT)
 UNIT_TESTS = [
     "tests/test_ingestion_simple.py",
     "tests/test_document_storage.py",
+    "tests/test_chunking_service.py",
+    "tests/test_ingestion_service.py",
+    "tests/test_embedding_service.py",
+    "tests/test_retrieval_service.py",
 ]
 
 def main():

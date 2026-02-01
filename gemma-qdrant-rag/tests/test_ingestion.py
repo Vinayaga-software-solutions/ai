@@ -10,9 +10,8 @@ from pathlib import Path
 # Add parent directory to path for imports
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from app.ingestion_pipeline import IngestionPipeline
-from app.text_extractor import TextExtractor, TextCleaner
-from app.chunker import TextChunker, DocumentChunker
+from app.ingestion import IngestionPipeline, TextExtractor
+from app.chunking import TextChunker, DocumentChunker, TextCleaner
 import logging
 
 # Configure logging

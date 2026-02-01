@@ -12,12 +12,9 @@ import os
 # Add the parent directory to sys.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from app.ingestion_pipeline import IngestionPipeline
-from app.text_extractor import TextExtractor
-from app.chunker import DocumentChunker
-from app.embeddings import BGEEmbeddings
-from app.vector_store import VectorDB
-from app.document_storage import get_document_storage
+from app.ingestion import IngestionPipeline, TextExtractor, get_document_storage
+from app.chunking import DocumentChunker
+from app.embedding import BGEEmbeddings, VectorDB
 
 # Configure logging
 logging.basicConfig(

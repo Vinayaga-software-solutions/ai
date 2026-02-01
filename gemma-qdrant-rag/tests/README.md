@@ -11,7 +11,7 @@ Automated unit and integration tests for the Gemma-Qdrant RAG service.
 python tests/run_unit_tests.py
 ```
 
-Runs ingestion pipeline and document storage tests. No API, Qdrant, or LLM required.
+Runs all unit tests including per-microservice tests. No API, Qdrant, or LLM required.
 
 ---
 
@@ -35,6 +35,10 @@ Waits for `http://localhost:8000`, then runs the full suite (ingest sample data 
 | **Full integration** (ingest + Q&A) | `cd tests; python run_tests.py` | API running |
 | **Ingestion pipeline** | `python tests/test_ingestion_simple.py` | None |
 | **Document storage** | `python tests/test_document_storage.py` | None |
+| **Chunking service** | `python tests/test_chunking_service.py` | None |
+| **Ingestion service** | `python tests/test_ingestion_service.py` | None |
+| **Embedding service** | `python tests/test_embedding_service.py` | None |
+| **Retrieval service** | `python tests/test_retrieval_service.py` | None |
 
 ---
 
@@ -43,6 +47,10 @@ Waits for `http://localhost:8000`, then runs the full suite (ingest sample data 
 ### Unit (no services)
 - **`test_ingestion_simple.py`**: Extract, clean, chunk pipeline (no Qdrant/embeddings).
 - **`test_document_storage.py`**: Local save/copy, directory creation, GCS config (local vs gcs). Uses a temp dir; no GCS credentials needed.
+- **`test_chunking_service.py`**: Chunking microservice — TextCleaner, TextChunker, DocumentChunker.
+- **`test_ingestion_service.py`**: Ingestion microservice — TextExtractor, document storage, IngestionPipeline (with mocked embed/store).
+- **`test_embedding_service.py`**: Embedding microservice — VectorDB (local path, no server), BGEEmbeddings (mocked remote).
+- **`test_retrieval_service.py`**: Retrieval microservice — GemmaLLM with mocked ollama/OpenAI.
 
 ### Integration (API running)
 - **`run_tests.py`**: Ingest sample data, then ~20 cases — answerable, refusal, and edge questions; writes `test_results.json`.

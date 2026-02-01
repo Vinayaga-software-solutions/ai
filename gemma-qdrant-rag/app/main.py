@@ -1,9 +1,9 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from .embeddings import BGEEmbeddings
-from .vector_store import VectorDB
-from .llm import GemmaLLM
-from .config import settings
+from app.embedding import BGEEmbeddings, VectorDB
+from app.retrieval import GemmaLLM
+from app.config import settings
+from app.ingestion import IngestionPipeline
 import uvicorn
 
 app = FastAPI(title="Gemma-Qdrant RAG Service")
@@ -22,16 +22,34 @@ class IngestRequest(BaseModel):
 
 @app.post("/ingest")
 async def ingest_data(request: IngestRequest):
+    """Use the full ingestion pipeline for /ingest requests so behavior matches file ingestion.
+    This will apply cleaning, chunking, embedding generation, and proper metadata payloads.
+    """
     try:
-        vector = embeddings.embed_query(request.text)
-        # Using hash of text as a simple ID method for demo
-        point_id = hash(request.text) % (10**8) 
-        db.upsert(
-            ids=[point_id],
-            vectors=[vector],
-            payloads=[{"text": request.text, **request.metadata}]
+        pipeline = IngestionPipeline()
+        doc_id = None
+        source = None
+        additional_metadata = None
+        if request.metadata:
+            additional_metadata = request.metadata
+            doc_id = request.metadata.get("doc_id")
+            source = request.metadata.get("source")
+
+        result = pipeline.ingest_text(
+            text=request.text,
+            doc_id=doc_id,
+            source=source or "api",
+            additional_metadata=additional_metadata
         )
-        return {"status": "success", "id": point_id}
+
+        if result.get("success"):
+            return {
+                "status": "success",
+                "id": result.get("doc_id"),
+                "chunks_created": result.get("chunks_created"),
+            }
+        else:
+            raise HTTPException(status_code=500, detail=result.get("error", "ingestion failed"))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

@@ -8,10 +8,12 @@ from datetime import datetime
 import logging
 import uuid
 
-from .text_extractor import TextExtractor, TextCleaner
-from .chunker import DocumentChunker, TextChunker
-from .embeddings import BGEEmbeddings
-from .vector_store import VectorDB
+from .text_extractor import TextExtractor
+from app.chunking import TextCleaner
+from app.chunking.chunker import DocumentChunker, TextChunker
+from app.embedding.embeddings import BGEEmbeddings
+from app.embedding.vector_store import VectorDB
+from app.config import settings
 
 logger = logging.getLogger(__name__)
 
@@ -254,27 +256,63 @@ class IngestionPipeline:
             # Store in Qdrant
             chunk_ids = [hash(chunk["chunk_id"]) % (10 ** 10) for chunk in chunks]
             
-            payloads = [
-                {
-                    "text": chunk["text"],
-                    "doc_id": chunk["doc_id"],
-                    "chunk_id": chunk["chunk_id"],
-                    "chunk_index": chunk["chunk_index"],
-                    "total_chunks": chunk["total_chunks"],
-                    "token_count": chunk["token_count"],
-                    "source": chunk["source"],
-                    "timestamp": chunk["timestamp"],
+            # Build payloads defensively to ensure essential chunk metadata is always present
+            payloads = []
+            for idx, chunk in enumerate(chunks):
+                # Provide defaults if any keys are missing
+                doc_id_val = chunk.get("doc_id") or doc_id
+                chunk_index = chunk.get("chunk_index", idx)
+                total_chunks = chunk.get("total_chunks", len(chunks))
+                chunk_id = chunk.get("chunk_id", f"{doc_id_val}_chunk_{chunk_index}")
+                token_count = chunk.get("token_count", self.chunker.token_chunker.count_tokens(chunk.get("text", "")))
+                source_val = chunk.get("source", source)
+                timestamp_val = chunk.get("timestamp", (datetime.utcnow().isoformat()))
+
+                payload = {
+                    "text": chunk.get("text", ""),
+                    "doc_id": doc_id_val,
+                    "chunk_id": chunk_id,
+                    "chunk_index": chunk_index,
+                    "total_chunks": total_chunks,
+                    "token_count": token_count,
+                    "source": source_val,
+                    "timestamp": timestamp_val,
                     **(additional_metadata or {})
                 }
-                for chunk in chunks
-            ]
+
+                # Log if any required metadata was missing and had to be defaulted
+                missing_keys = [k for k in ["doc_id", "chunk_id"] if not chunk.get(k)]
+                if missing_keys:
+                    logger.warning(f"Chunk {idx} missing keys {missing_keys}; defaulted values will be used.")
+
+                payloads.append(payload)
             
+# Log payload structure for debugging: keys and a short text preview
+            try:
+                sample_payloads = [{k: (v if k != 'text' else (v[:100] + '...' if len(v) > 100 else v)) for k,v in p.items()} for p in payloads[:3]]
+                logger.info(f"Upserting payloads sample (up to 3): {sample_payloads}")
+            except Exception as e:
+                logger.warning(f"Could not log payloads: {e}")
+
             self.vector_store.upsert(
                 ids=chunk_ids,
                 vectors=embeddings,
                 payloads=payloads
             )
             
+            # Verification: scroll a few points from Qdrant and log their payloads to confirm metadata persisted
+            try:
+                import requests
+                col = self.vector_store.collection_name
+                qdrant_url = f"http://{settings.QDRANT_HOST}:{settings.QDRANT_PORT}/collections/{col}/points/scroll"
+                body = {"limit": min(5, len(chunk_ids)), "with_payload": True, "with_vector": False}
+                resp = requests.post(qdrant_url, json=body, timeout=5)
+                resp.raise_for_status()
+                points = resp.json().get("result", {}).get("points", [])
+                logger.info(f"Post-upsert sample points from Qdrant (up to 5): {[p.get('payload') for p in points[:5]]}")
+            except Exception as e:
+                logger.warning(f"Could not verify points in Qdrant after upsert: {e}")
+
             logger.info(f"Successfully stored {len(chunks)} chunks in Qdrant")
             
             return {

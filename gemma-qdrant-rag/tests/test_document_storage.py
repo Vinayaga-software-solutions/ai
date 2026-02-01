@@ -11,7 +11,7 @@ from pathlib import Path
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 
-from app.document_storage import (
+from app.ingestion.document_storage import (
     LocalDocumentStorage,
     GCSDocumentStorage,
     get_document_storage,

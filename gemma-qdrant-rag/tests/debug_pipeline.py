@@ -2,7 +2,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 try:
-    from app.ingestion_pipeline import IngestionPipeline
+    from app.ingestion import IngestionPipeline
     print("✅ Module imported")
     pipeline = IngestionPipeline()
     print("✅ Pipeline instantiated")

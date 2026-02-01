@@ -1,6 +1,6 @@
 import requests
 from typing import List
-from .config import settings
+from app.config import settings
 import logging
 
 logger = logging.getLogger(__name__)

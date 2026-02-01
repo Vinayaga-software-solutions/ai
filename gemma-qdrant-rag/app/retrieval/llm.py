@@ -1,6 +1,6 @@
 import ollama
 from openai import OpenAI
-from .config import settings
+from app.config import settings
 
 class GemmaLLM:
     def __init__(self):

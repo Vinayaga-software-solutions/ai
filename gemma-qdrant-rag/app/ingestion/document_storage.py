@@ -10,7 +10,7 @@ import logging
 import shutil
 from datetime import datetime
 
-from .config import settings
+from app.config import settings
 
 logger = logging.getLogger(__name__)
 

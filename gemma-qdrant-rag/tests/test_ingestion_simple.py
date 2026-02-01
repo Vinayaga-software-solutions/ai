@@ -10,8 +10,8 @@ import os
 # Add the parent directory to sys.path
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 
-from app.text_extractor import TextExtractor, TextCleaner
-from app.chunker import TextChunker, DocumentChunker
+from app.ingestion import TextExtractor
+from app.chunking import TextChunker, DocumentChunker, TextCleaner
 import logging
 
 # Configure logging
