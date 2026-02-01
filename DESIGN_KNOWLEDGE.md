@@ -20,6 +20,51 @@
 
 ---
 
+## Mind Map
+OUR PLATFORM
+│
+├─ Data Ingestion
+│  ├─ RudderStack (SDK / API / Events)
+│  └─ Airbyte (DBs / Black-box systems)
+│
+├─ Raw Data Layer
+│  └─ Secure, immutable raw DB
+│
+├─ ONE-TIME PIPELINE GENERATION (key)
+│  ├─ Analyze schema + metadata
+│  ├─ Decide engines (MindsDB / Gemini)
+│  ├─ Auto-generate CODED pipeline
+│  │  ├─ Chunking rules
+│  │  ├─ Embedding strategy
+│  │  ├─ Storage layout
+│  │  └─ Governance hooks
+│  └─ Persist pipeline definition
+│
+├─ CONTINUOUS PIPELINE (reused)
+│  ├─ Incremental syncs
+│  ├─ Re-chunk only deltas
+│  ├─ Update vectors + metadata
+│  └─ No re-learning
+│
+├─ Query Flow
+│  ├─ User query
+│  ├─ Route via pipeline
+│  ├─ MindsDB (SQL)
+│  ├─ Gemini (Docs)
+│  └─ Merge results
+│
+├─ Governance
+│  ├─ Policy checks
+│  ├─ Masking
+│  ├─ Deny logic
+│  └─ Audit logs
+│
+└─ Delivery
+   ├─ API
+   ├─ UI
+   └─ Webhooks
+
+
 ## Data Flow Architecture
 
 ### 1. Data Ingestion(Ingestion Service)
@@ -28,7 +73,8 @@
 
 ### 2. Pre-processing(Chuking Service)
 ```
-Filter → Clean data → Add metadata (source, date, tags)
+- Filter → Clean data → Add metadata (source, date, tags)
+- Use RudderStack/Airbytes
 ```
 
 ### 3. Summary generator(Chuking Service)
@@ -50,6 +96,7 @@ Split into smaller chunks → Add metadata (source, date, tags) -> store chunkin
 ### 6. User Query → Embedding(Retrieval Service)
 - Convert incoming user question into embedding
 - **Critical:** Use the same embedding model as storage
+- Use something like MindsDB + gemini cli so that they can tune it.
 
 ### 7. Retrieval(Retrieval Service)
 - Perform similarity search in vector DB
