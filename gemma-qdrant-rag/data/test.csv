@@ -1,0 +1,10 @@
+doc_id,level,part,article,clause,sub_clause,section_title,text,amendment_year,case_law,cross_ref,confidence_score
+constitution,PREAMBLE,,,"",,"PREAMBLE","WE, THE PEOPLE OF INDIA, having solemnly resolved to constitute India into a Sovereign Socialist Secular Democratic Republic...",1976,,"",0.98
+constitution,PART,PART III,,,,"Fundamental Rights","Rights guaranteed to individuals against the State",,,"",0.92
+constitution,ARTICLE,PART III,Article 14,,,"Equality before law","The State shall not deny to any person equality before the law...",1950,"Indra Sawhney v. Union of India","Article 21",0.95
+constitution,ARTICLE,PART III,Article 21,,,"Protection of life and personal liberty","No person shall be deprived of his life or personal liberty except according to procedure established by law.",1950,"Maneka Gandhi v. Union of India","Article 14|Article 19",0.97
+constitution,CLAUSE,PART III,Article 21,21-1,,"Clause (1)","Procedure established by law must be just, fair, and reasonable.",1978,"Maneka Gandhi v. Union of India","Article 14",0.96
+constitution,PART,PART IV,,,,"Directive Principles of State Policy","Guidelines for governance; not enforceable by courts",,,"",0.90
+constitution,ARTICLE,PART IV,Article 39,,,"Policy principles","The State shall direct its policy towards securing adequate means of livelihood.",1978,,"Article 21",0.91
+constitution,ARTICLE,PART XVIII,Article 352,,,"Proclamation of Emergency","Emergency provisions during war or armed rebellion.",1975,"ADM Jabalpur v. Shivkant Shukla","Article 358|Article 359",0.94
+constitution,METADATA,,,,,"INGESTION","OCR=true; chunking=tree; overlap=50; embedding=bge-large",,,,"",1.00

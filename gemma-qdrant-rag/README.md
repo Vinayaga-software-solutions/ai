@@ -179,6 +179,9 @@ python scripts/ingest_cli.py --file data/sample_document.txt
 python scripts/ingest_cli.py --text "Your own content here."
 ```
 
+### DOC (legacy) files
+Legacy `.doc` files require external tooling. The simplest and most reliable path is to convert `.doc` → `.docx` before ingestion. `.docx` is fully supported out of the box.
+
 ### Document storage (local vs GCS)
 In `.env`: **Local** — `STORAGE_BACKEND=local`, `LOCAL_STORAGE_PATH=./storage/documents`. **GCS** — `STORAGE_BACKEND=gcs`, `GCS_BUCKET_NAME=your-bucket-name`. Ingested content is saved to the configured backend after successful ingestion.
 

@@ -1,0 +1,79 @@
+{
+  "document": {
+    "id": "constitution_of_india",
+    "title": "The Constitution of India",
+    "version": "2024-01",
+    "metadata": {
+      "jurisdiction": "India",
+      "language": "English",
+      "source": "constitution.pdf",
+      "ingested_at": "2026-02-03T14:10:00Z"
+    },
+    "structure": {
+      "preamble": {
+        "title": "PREAMBLE",
+        "text": "WE, THE PEOPLE OF INDIA, having solemnly resolved to constitute India into a Sovereign Socialist Secular Democratic Republic...",
+        "tokens": 128
+      },
+      "parts": [
+        {
+          "part_number": "PART III",
+          "title": "Fundamental Rights",
+          "summary": "Rights guaranteed to individuals against the State.",
+          "articles": [
+            {
+              "article_number": "Article 21",
+              "title": "Protection of life and personal liberty",
+              "clauses": [
+                {
+                  "clause_id": "21-1",
+                  "text": "No person shall be deprived of his life or personal liberty except according to procedure established by law.",
+                  "annotations": {
+                    "keywords": ["life", "personal liberty", "procedure established by law"],
+                    "is_amended": false
+                  }
+                }
+              ],
+              "cases": [
+                {
+                  "case_name": "Maneka Gandhi v. Union of India",
+                  "year": 1978,
+                  "principle": "Expanded scope of Article 21"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "part_number": "PART IV",
+          "title": "Directive Principles of State Policy",
+          "articles": [
+            {
+              "article_number": "Article 39",
+              "title": "Certain principles of policy to be followed by the State",
+              "clauses": [
+                {
+                  "clause_id": "39-a",
+                  "text": "The State shall direct its policy towards securing that citizens have the right to an adequate means of livelihood."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "cross_references": [
+      {
+        "from": "Article 21",
+        "to": "Article 14",
+        "relationship": "interpreted_with"
+      }
+    ],
+    "audit": {
+      "chunking_strategy": "section-aware-tree",
+      "chunk_size": 300,
+      "overlap": 50,
+      "total_chunks": 412
+    }
+  }
+}

@@ -9,3 +9,6 @@ python-dotenv
 requests
 google-cloud-storage
 pypdf
+python-docx
+openpyxl
+xlrd
