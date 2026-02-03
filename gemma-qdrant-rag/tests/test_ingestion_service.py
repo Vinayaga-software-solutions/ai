@@ -64,7 +64,11 @@ def test_ingestion_document_storage_save():
 
 
 def test_ingestion_pipeline_with_mocks():
-    """IngestionPipeline runs extract -> clean -> chunk; embed/store are mocked."""
+    """IngestionPipeline runs extract -> clean -> chunk; embed/store are mocked.
+
+    Update: ingestion pipeline delegates to ingestion microservice, so mock
+    requests.post to simulate the ingestion-service response.
+    """
     mock_emb = MagicMock()
     mock_emb.embed_documents.return_value = [[0.1] * 384, [0.2] * 384]  # 2 chunks
     mock_db = MagicMock()
@@ -72,15 +76,22 @@ def test_ingestion_pipeline_with_mocks():
     if not sample.exists():
         logger.warning("Skip test_ingestion_pipeline_with_mocks: sample_document.txt not found")
         return True
+
     pipeline = IngestionPipeline(embeddings=mock_emb, vector_store=mock_db)
-    result = pipeline.ingest_file(str(sample))
+
+    # Mock the ingestion-service HTTP call that ingest_file delegates to
+    with patch("requests.post") as mock_post:
+        resp = MagicMock()
+        resp.raise_for_status = MagicMock()
+        resp.json.return_value = {"success": True, "doc_id": "sample_doc_1", "chunks_created": 2}
+        mock_post.return_value = resp
+
+        result = pipeline.ingest_file(str(sample))
+
     assert result["success"] is True
     assert result["chunks_created"] >= 1
-    assert mock_emb.embed_documents.called
-    assert mock_db.upsert.called
     logger.info("PASS: test_ingestion_pipeline_with_mocks")
     return True
-
 
 def main():
     logger.info("Ingestion service tests...")

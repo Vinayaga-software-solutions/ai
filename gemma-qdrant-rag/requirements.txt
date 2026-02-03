@@ -1,7 +1,5 @@
 fastapi
 uvicorn
-qdrant-client>=1.11.0
-fastembed
 ollama
 pydantic
 pydantic-settings
@@ -9,5 +7,4 @@ python-multipart
 openai
 python-dotenv
 requests
-tiktoken
 google-cloud-storage

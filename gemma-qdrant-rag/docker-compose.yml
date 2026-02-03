@@ -29,12 +29,14 @@ services:
     restart: always
 
   # 3. Embedding Service (BGE)
-  # Example using Hugging Face Text Embeddings Inference (TEI)
+  # Local Embedding Service (can proxy to a remote TEI instance via EMBEDDING_REMOTE_URL)
   embedding-service:
-    image: ghcr.io/huggingface/text-embeddings-inference:cpu-latest
+    build: ./services/embedding
     ports:
       - "8081:80"
-    command: --model-id BAAI/bge-small-en-v1.5
+    env_file: .env.services
+    environment:
+      - EMBEDDING_STRATEGY=local
     restart: always
 
   # 4. LLM Service (Gemma)

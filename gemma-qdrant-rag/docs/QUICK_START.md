@@ -1,10 +1,12 @@
 # Ingestion Pipeline - Quick Start Guide
 
+> Note: This repository moved to a microservice-first architecture. The local in-process embedding fallback (fastembed) and direct Qdrant usage from the orchestrator were removed. Run the full pipeline with Docker Compose (`docker compose up --build`) or mock service calls when running unit tests locally.
+
 ## 🚀 Get Started in 5 Minutes
 
 ### Prerequisites
 
-- Python 3.10+ (Note: Full pipeline requires Python 3.10-3.12 for fastembed)
+- Python 3.10+
 - Docker and Docker Compose (for full functionality)
 - Git
 
@@ -16,11 +18,9 @@
 # Clone the repository
 cd c:\Users\vaidh\Documents\ai\gemma-qdrant-rag
 
-# Install minimal dependencies
-python -m pip install tiktoken
-
-# Run core component tests
-python test_ingestion_simple.py
+# No extra native embedding dependencies are required for the basic tests
+# Run core component tests (they mock external services)
+python tests/test_ingestion_simple.py
 ```
 
 **Output:**

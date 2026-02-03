@@ -1,10 +1,54 @@
 """
-Text Chunking Module
-Implements intelligent chunking strategies based on token count (400-600 tokens)
+Text Chunking Module (deprecated local implementation)
+Prefer using the `chunking` microservice. The local chunker remains as a
+fallback for backward compatibility but will be removed in future.
 """
+import warnings
 from typing import List, Dict, Any
-import tiktoken
 import re
+
+warnings.warn("app.chunking.* is deprecated: use the chunking microservice instead", DeprecationWarning, stacklevel=2)
+
+
+class TextChunker:
+    """
+    Handles text chunking with configurable token limits.
+    Based on DESIGN_KNOWLEDGE.md chunking strategies.
+
+    Note: `tiktoken` is imported lazily so the orchestrator can start even if the
+    local chunker native dependency is not installed (we encourage using the
+    chunking microservice instead).
+    """
+    
+    def __init__(
+        self, 
+        min_tokens: int = 100, 
+        max_tokens: int = 500,  # Reduced to fit BGE 512 context limit
+        overlap_tokens: int = 50,
+        encoding_name: str = "cl100k_base"
+    ):
+        """
+        Initialize the chunker.
+        
+        Args:
+            min_tokens: Minimum tokens per chunk
+            max_tokens: Maximum tokens per chunk
+            overlap_tokens: Number of tokens to overlap between chunks
+            encoding_name: Tiktoken encoding to use
+        """
+        # Import tiktoken lazily and raise an informative error if missing
+        try:
+            import tiktoken  # type: ignore
+        except Exception as e:
+            raise ImportError(
+                "tiktoken is required to use TextChunker locally. "
+                "Install it (pip install tiktoken) or use the chunking microservice instead."
+            ) from e
+
+        self.min_tokens = min_tokens
+        self.max_tokens = max_tokens
+        self.overlap_tokens = overlap_tokens
+        self.encoding = tiktoken.get_encoding(encoding_name)
 
 
 class TextChunker:
@@ -159,44 +203,38 @@ class TextChunker:
 
 
 class DocumentChunker:
+    """Document chunker that delegates to the chunking microservice.
+
+    This implementation will raise an exception if the chunking service cannot
+    be reached. Local chunking support has been removed.
     """
-    Handles document-level chunking with section awareness.
-    Implements the Document -> Section mapping from DESIGN_KNOWLEDGE.md
-    """
-    
-    def __init__(self, token_chunker: TextChunker = None):
-        self.token_chunker = token_chunker or TextChunker()
-    
+
+    def __init__(self):
+        from app.config import settings
+        self.chunking_host = getattr(settings, "CHUNKING_HOST", "chunking")
+        self.chunking_port = getattr(settings, "CHUNKING_PORT", 80)
+        self.chunk_url = f"http://{self.chunking_host}:{self.chunking_port}/chunk"
+
     def chunk_document(
-        self, 
-        text: str, 
+        self,
+        text: str,
         doc_id: str,
         source: str,
-        metadata: Dict[str, Any] = None
+        metadata: Dict[str, Any] = None,
     ) -> List[Dict[str, Any]]:
-        """
-        Chunk a document with proper metadata.
-        
-        Args:
-            text: Document text
-            doc_id: Unique document identifier
-            source: Source of the document
-            metadata: Additional metadata
-            
-        Returns:
-            List of chunks with full metadata
-        """
-        base_metadata = {
-            "doc_id": doc_id,
-            "source": source,
-            **(metadata or {})
-        }
-        
-        chunks = self.token_chunker.chunk_by_tokens(text, base_metadata)
-        
-        # Add document-level information
+        payload = {"text": text, "doc_id": doc_id, "source": source}
+        if metadata:
+            payload["metadata"] = metadata
+
+        import requests
+        resp = requests.post(self.chunk_url, json=payload, timeout=30)
+        resp.raise_for_status()
+        data = resp.json()
+        chunks = data.get("chunks", [])
+        # Ensure chunk ids and totals exist
         for i, chunk in enumerate(chunks):
-            chunk["chunk_id"] = f"{doc_id}_chunk_{i}"
-            chunk["total_chunks"] = len(chunks)
-        
+            if "chunk_id" not in chunk:
+                chunk["chunk_id"] = f"{doc_id}_chunk_{i}"
+            if "total_chunks" not in chunk:
+                chunk["total_chunks"] = len(chunks)
         return chunks

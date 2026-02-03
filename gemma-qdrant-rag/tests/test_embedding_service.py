@@ -17,64 +17,49 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 
-def test_vector_db_local_upsert_search():
-    """VectorDB with QDRANT_PATH (local) can upsert and search without a server."""
-    tmp = tempfile.mkdtemp(prefix="qdrant_test_")
-    try:
-        with patch("app.embedding.vector_store.settings") as mock_settings:
-            mock_settings.QDRANT_PATH = tmp
-            mock_settings.QDRANT_HOST = None
-            mock_settings.QDRANT_PORT = 6333
-            mock_settings.QDRANT_API_KEY = None
-            mock_settings.QDRANT_COLLECTION = "test_collection"
-            mock_settings.EMBEDDING_DIM = 4
-            from app.embedding import VectorDB
-            db = VectorDB()
-            try:
-                db.upsert(
-                    ids=[1],
-                    vectors=[[0.1, 0.2, 0.3, 0.4]],
-                    payloads=[{"text": "hello", "source": "test"}],
-                )
-                points = db.search([0.1, 0.2, 0.3, 0.4], limit=1, score_threshold=0.0)
-                assert len(points) >= 1
-                assert points[0].payload.get("text") == "hello"
-            finally:
-                del db
-    finally:
-        shutil.rmtree(tmp, ignore_errors=True)
-    logger.info("PASS: test_vector_db_local_upsert_search")
+def test_vector_db_proxy_upsert_search():
+    """VectorDB proxies upsert and search calls to retrieval microservice."""
+    with patch("app.embedding.vector_store.settings") as mock_settings:
+        mock_settings.QDRANT_COLLECTION = "test_collection"
+        mock_settings.RETRIEVAL_HOST = "fakehost"
+        mock_settings.RETRIEVAL_PORT = 1234
+        from app.embedding import VectorDB
+        db = VectorDB()
+        # Mock requests.post for upsert and search
+        with patch("requests.post") as mock_post:
+            # upsert call returns 200
+            mock_post.return_value.raise_for_status = MagicMock()
+            db.upsert(ids=[1], vectors=[[0.1, 0.2, 0.3, 0.4]], payloads=[{"text": "hello", "source": "test"}])
+            # Ensure first call was to /vectors/upsert
+            assert any("/vectors/upsert" in args[0] for args, _ in mock_post.call_args_list)
+
+            # Now mock search response
+            mock_post.reset_mock()
+            resp = MagicMock()
+            resp.raise_for_status = MagicMock()
+            resp.json.return_value = {"results": [{"payload": {"text": "hello"}, "score": 0.9}]}
+            mock_post.return_value = resp
+            results = db.search([0.1, 0.2, 0.3, 0.4], limit=1, score_threshold=0.0)
+            assert len(results) == 1
+            assert results[0]["payload"]["text"] == "hello"
+    logger.info("PASS: test_vector_db_proxy_upsert_search")
     return True
 
 
-def test_vector_db_clear():
-    """VectorDB.clear() recreates collection; after clear, only new points exist."""
-    tmp = tempfile.mkdtemp(prefix="qdrant_test_clear_")
-    try:
-        with patch("app.embedding.vector_store.settings") as mock_settings:
-            mock_settings.QDRANT_PATH = tmp
-            mock_settings.QDRANT_HOST = None
-            mock_settings.QDRANT_PORT = 6333
-            mock_settings.QDRANT_API_KEY = None
-            mock_settings.QDRANT_COLLECTION = "test_clear"
-            mock_settings.EMBEDDING_DIM = 4
-            from app.embedding import VectorDB
-            db = VectorDB()
-            try:
-                db.upsert(ids=[1], vectors=[[0.1] * 4], payloads=[{"t": "old"}])
-                db.clear()
-                # After clear, upsert one new point; search should return only that one.
-                db.upsert(ids=[2], vectors=[[0.2] * 4], payloads=[{"t": "new"}])
-                points = db.search([0.2] * 4, limit=10, score_threshold=0.0)
-                assert len(points) >= 1
-                assert points[0].payload.get("t") == "new"
-            finally:
-                del db
-    finally:
-        shutil.rmtree(tmp, ignore_errors=True)
-    logger.info("PASS: test_vector_db_clear")
+def test_vector_db_proxy_clear():
+    """VectorDB.clear() will call the retrieval service clear endpoint."""
+    with patch("app.embedding.vector_store.settings") as mock_settings:
+        mock_settings.QDRANT_COLLECTION = "test_clear"
+        mock_settings.RETRIEVAL_HOST = "fakehost"
+        mock_settings.RETRIEVAL_PORT = 1234
+        from app.embedding import VectorDB
+        db = VectorDB()
+        with patch("requests.post") as mock_post:
+            mock_post.return_value.raise_for_status = MagicMock()
+            db.clear()
+            assert any("/vectors/clear" in args[0] for args, _ in mock_post.call_args_list)
+    logger.info("PASS: test_vector_db_proxy_clear")
     return True
-
 
 def test_bge_embeddings_remote_mock():
     """BGEEmbeddings (remote strategy) returns vectors from mocked API."""
@@ -105,8 +90,8 @@ def test_bge_embeddings_remote_mock():
 def main():
     logger.info("Embedding service tests...")
     tests = [
-        test_vector_db_local_upsert_search,
-        test_vector_db_clear,
+        test_vector_db_proxy_upsert_search,
+        test_vector_db_proxy_clear,
         test_bge_embeddings_remote_mock,
     ]
     failed = []

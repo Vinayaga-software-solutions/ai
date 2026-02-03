@@ -53,7 +53,7 @@ Invoke-RestMethod -Uri "http://localhost:8000/memory" -Method Delete
 *Bash:* `curl -X DELETE http://localhost:8000/memory`  
 *On success: `{"status": "ok", "message": "Qdrant memory cleared."}` — collection is recreated empty.*
 
-For **automated unit and integration tests**, see [tests/README.md](tests/README.md).
+For **automated unit and integration tests**, see [tests/README.md](tests/README.md). Note: unit tests are designed to run without Docker by mocking service HTTP calls; run the integration smoke test using Docker Compose (`docker compose up smoke`) for end-to-end validation.
 
 ---
 
@@ -64,17 +64,23 @@ Run the app without Docker from the project root. You need Qdrant, an embedding 
 ### 1. Prerequisites
 - Python 3.10+
 - Qdrant running (e.g. `docker run -p 6333:6333 qdrant/qdrant`) or use a remote URL
-- Embeddings: either local (fastembed) or a remote embedding API
+- Embeddings: **remote** embedding service (Text Embeddings Inference, TEI). The previous in-process local fallback (fastembed) has been removed — run the embedding microservice in Docker Compose or point `EMBEDDING_API_URL` to a hosted TEI endpoint.
 - LLM: Ollama with `gemma:2b` or an OpenAI-compatible API (set `LLM_BASE_URL` / `LLM_API_KEY` in `.env`)
 
 ### 2. Install and configure
 ```powershell
 cd gemma-qdrant-rag
+# Install orchestrator (top-level) dependencies
 pip install -r requirements.txt
-copy .env.example .env
-# Edit .env: QDRANT_HOST, QDRANT_PORT, EMBEDDING_STRATEGY, LLM_BASE_URL, etc.
-```
 
+# If you are developing a specific service, install its deps separately
+pip install -r services/embedding/requirements.txt
+pip install -r services/retrieval/requirements.txt
+pip install -r services/chunking/requirements.txt
+
+copy .env.example .env
+# Edit .env: QDRANT_HOST, QDRANT_PORT, EMBEDDING_API_URL, LLM_BASE_URL, etc.
+```
 ### 3. Start the API
 ```powershell
 uvicorn app.main:app --host 0.0.0.0 --port 8000
@@ -133,7 +139,7 @@ You can tune the system behavior by editing the `.env` file or mapping environme
 | `LLM_MAX_TOKENS`| `512` | Max tokens for generation |
 | `LLM_TEMPERATURE`| `0.7` | Randomness of response |
 | `LLM_TOP_P` | `0.9` | Diversity of response |
-| `EMBEDDING_STRATEGY`| `remote` | `local` (fastembed) or `remote` (TEI) |
+| `EMBEDDING_STRATEGY`| `remote` | `remote` (TEI). **Local in-process mode has been removed.** |
 
 ---
 
@@ -152,10 +158,19 @@ $env:QDRANT_HOST="localhost"; $env:QDRANT_PORT="6333"; $env:EMBEDDING_STRATEGY="
 python scripts/ingest_cli.py --file "data/sample_document.txt"
 ```
 
+**PowerShell (Local host, talking to Docker services):**
+```powershell
+$env:QDRANT_HOST="localhost"; $env:QDRANT_PORT="6333"
+$env:EMBEDDING_STRATEGY="remote"; $env:EMBEDDING_API_URL="http://localhost:8081/embed"
+$env:INGESTION_HOST="localhost"; $env:INGESTION_PORT="8010"
+python scripts/ingest_cli.py --file "data/sample_document.txt"
+```
+
 **Bash:**
 ```bash
 export QDRANT_HOST=localhost QDRANT_PORT=6333
 export EMBEDDING_STRATEGY=remote EMBEDDING_API_URL="http://localhost:8081/embed"
+export INGESTION_HOST=localhost INGESTION_PORT=8010
 python scripts/ingest_cli.py --file data/sample_document.txt
 ```
 

@@ -1,4 +1,4 @@
 from .text_cleaner import TextCleaner
-from .chunker import DocumentChunker, TextChunker
+from .chunker import DocumentChunker
 
-__all__ = ["TextCleaner", "DocumentChunker", "TextChunker"]
+__all__ = ["TextCleaner", "DocumentChunker"]

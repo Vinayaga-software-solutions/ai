@@ -9,7 +9,8 @@ import logging
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 
-from app.chunking import TextCleaner, TextChunker, DocumentChunker
+from app.chunking import TextCleaner, DocumentChunker
+from app.chunking.chunker import TextChunker
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
@@ -61,12 +62,31 @@ def test_text_chunker_empty():
 
 
 def test_document_chunker_metadata():
-    """DocumentChunker adds doc_id, source, chunk_id, total_chunks to each chunk."""
+    """DocumentChunker adds doc_id, source, chunk_id, total_chunks to each chunk.
+
+    This test mocks the chunking microservice HTTP response so it runs without Docker.
+    """
+    from unittest.mock import patch, MagicMock
+
     doc_chunker = DocumentChunker()
     text = "Some content. " * 50
-    chunks = doc_chunker.chunk_document(
-        text=text, doc_id="doc_1", source="test.txt", metadata={"author": "test"}
-    )
+
+    # Mock requests.post to return a deterministic chunk list
+    with patch("requests.post") as mock_post:
+        resp = MagicMock()
+        resp.raise_for_status = MagicMock()
+        resp.json.return_value = {
+            "chunks": [
+                {"text": "Some content.", "chunk_index": 0, "token_count": 50, "doc_id": "doc_1", "source": "test.txt", "author": "test", "chunk_id": "doc_1_chunk_0", "total_chunks": 2},
+                {"text": "Some content.", "chunk_index": 1, "token_count": 50, "doc_id": "doc_1", "source": "test.txt", "author": "test", "chunk_id": "doc_1_chunk_1", "total_chunks": 2},
+            ]
+        }
+        mock_post.return_value = resp
+
+        chunks = doc_chunker.chunk_document(
+            text=text, doc_id="doc_1", source="test.txt", metadata={"author": "test"}
+        )
+
     assert len(chunks) >= 1
     for i, c in enumerate(chunks):
         assert c["doc_id"] == "doc_1"

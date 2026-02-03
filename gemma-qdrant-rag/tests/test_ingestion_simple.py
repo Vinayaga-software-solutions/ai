@@ -100,18 +100,30 @@ def test_document_chunking():
     logger.info("\n" + "=" * 60)
     logger.info("TEST 4: Document Chunking with Metadata")
     logger.info("=" * 60)
-    
+
+    from unittest.mock import patch, MagicMock
     doc_chunker = DocumentChunker()
-    
+
     sample_text = "This is a test document. " * 200  # Ensure multiple chunks
-    
-    chunks = doc_chunker.chunk_document(
-        text=sample_text,
-        doc_id="test_doc_001",
-        source="test_source",
-        metadata={"category": "test", "author": "test_user"}
-    )
-    
+
+    with patch("requests.post") as mock_post:
+        resp = MagicMock()
+        resp.raise_for_status = MagicMock()
+        resp.json.return_value = {
+            "chunks": [
+                {"text": "Chunk 0", "chunk_index": 0, "token_count": 120, "doc_id": "test_doc_001", "source": "test_source", "author": "test_user", "chunk_id": "test_doc_001_chunk_0", "total_chunks": 2},
+                {"text": "Chunk 1", "chunk_index": 1, "token_count": 110, "doc_id": "test_doc_001", "source": "test_source", "author": "test_user", "chunk_id": "test_doc_001_chunk_1", "total_chunks": 2},
+            ]
+        }
+        mock_post.return_value = resp
+
+        chunks = doc_chunker.chunk_document(
+            text=sample_text,
+            doc_id="test_doc_001",
+            source="test_source",
+            metadata={"category": "test", "author": "test_user"}
+        )
+
     logger.info(f"✅ Document chunking successful")
     logger.info(f"   Total chunks: {len(chunks)}")
     logger.info(f"   First chunk ID: {chunks[0]['chunk_id']}")
@@ -119,7 +131,7 @@ def test_document_chunking():
     logger.info(f"   Sample metadata:")
     for key in ['doc_id', 'source', 'chunk_index', 'total_chunks', 'token_count']:
         logger.info(f"      {key}: {chunks[0].get(key)}")
-    
+
     return True
 
 
@@ -144,16 +156,35 @@ def test_full_extraction_and_chunking():
         
         # Chunk
         doc_chunker = DocumentChunker()
-        chunks = doc_chunker.chunk_document(
-            text=cleaned_text,
-            doc_id="sample_doc_001",
-            source="sample_document.txt",
-            metadata={
-                "category": "documentation",
-                "test_run": True,
-                **result["metadata"]
+        from unittest.mock import patch, MagicMock
+        with patch("requests.post") as mock_post:
+            resp = MagicMock()
+            resp.raise_for_status = MagicMock()
+            resp.json.return_value = {
+                "chunks": [
+                    {
+                        "text": cleaned_text[:500],
+                        "chunk_index": 0,
+                        "token_count": 120,
+                        "doc_id": "sample_doc_001",
+                        "source": "sample_document.txt",
+                        "chunk_id": "sample_doc_001_chunk_0",
+                        "total_chunks": 1,
+                    }
+                ]
             }
-        )
+            mock_post.return_value = resp
+
+            chunks = doc_chunker.chunk_document(
+                text=cleaned_text,
+                doc_id="sample_doc_001",
+                source="sample_document.txt",
+                metadata={
+                    "category": "documentation",
+                    "test_run": True,
+                    **result["metadata"]
+                }
+            )
         
         logger.info(f"✅ Full pipeline successful")
         logger.info(f"   Original file: sample_document.txt")

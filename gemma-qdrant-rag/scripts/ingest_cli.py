@@ -44,11 +44,24 @@ def ingest_file(file_path: str, doc_id: str = None, source: str = None):
         except Exception as e:
             logger.warning(f"Storage save failed (ingestion succeeded): {e}")
         logger.info("✅ Ingestion successful!")
-        logger.info(f"Document ID: {result['doc_id']}")
-        logger.info(f"Source: {result['source']}")
-        logger.info(f"Chunks created: {result['chunks_created']}")
-        logger.info(f"Total characters: {result['total_characters']}")
-        logger.info(f"Chunk IDs: {', '.join(result['chunk_ids'][:5])}{'...' if len(result['chunk_ids']) > 5 else ''}")
+        doc_id_val = result.get("doc_id", "unknown")
+        logger.info(f"Document ID: {doc_id_val}")
+        source_val = result.get("source") or source or "unknown"
+        logger.info(f"Source: {source_val}")
+
+        chunks_created = result.get("chunks_created")
+        if chunks_created is None:
+            chunks_created = result.get("chunks")
+        if chunks_created is not None:
+            logger.info(f"Chunks created: {chunks_created}")
+
+        total_chars = result.get("total_characters")
+        if total_chars is not None:
+            logger.info(f"Total characters: {total_chars}")
+
+        chunk_ids = result.get("chunk_ids")
+        if chunk_ids:
+            logger.info(f"Chunk IDs: {', ' .join(chunk_ids[:5])}{'...' if len(chunk_ids) > 5 else ''}")
     else:
         logger.error(f"❌ Ingestion failed: {result['error']}")
         sys.exit(1)
@@ -75,9 +88,18 @@ def ingest_text(text: str, doc_id: str = None, source: str = "cli"):
         except Exception as e:
             logger.warning(f"Storage save failed (ingestion succeeded): {e}")
         logger.info("✅ Ingestion successful!")
-        logger.info(f"Document ID: {result['doc_id']}")
-        logger.info(f"Chunks created: {result['chunks_created']}")
-        logger.info(f"Total characters: {result['total_characters']}")
+        doc_id_val = result.get("doc_id", "unknown")
+        logger.info(f"Document ID: {doc_id_val}")
+
+        chunks_created = result.get("chunks_created")
+        if chunks_created is None:
+            chunks_created = result.get("chunks")
+        if chunks_created is not None:
+            logger.info(f"Chunks created: {chunks_created}")
+
+        total_chars = result.get("total_characters")
+        if total_chars is not None:
+            logger.info(f"Total characters: {total_chars}")
     else:
         logger.error(f"❌ Ingestion failed: {result['error']}")
         sys.exit(1)

@@ -16,7 +16,8 @@ class GemmaLLM:
     def generate(self, prompt: str, context: str = "") -> str:
         full_prompt = (
             "You are a helpful AI assistant. Use the provided context to answer the question accurately.\n"
-            "If the information is not in the context, state that you don't know based on the provided documents.\n\n"
+            "If the context contains the answer (even as a definition or a single sentence), answer it directly.\n"
+            "Only say you don't know if the answer is truly not present in the context.\n\n"
             f"### Context:\n{context}\n\n"
             f"### Question:\n{prompt}\n\n"
             f"### Answer:"

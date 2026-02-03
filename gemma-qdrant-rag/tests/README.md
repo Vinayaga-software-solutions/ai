@@ -65,6 +65,7 @@ Waits for `http://localhost:8000`, then runs the full suite (ingest sample data 
 
 ## Prerequisites and results
 
-1. **Start the API** (for integration tests): `docker-compose up -d` or `uvicorn app.main:app --port 8000`.
-2. **Install deps**: From project root, `pip install -r requirements.txt`.
-3. **Results**: Integration suite writes `tests/test_results.json`.
+1. **Start the API** (for integration tests): `docker compose up -d` or `uvicorn app.main:app --port 8000`.
+2. **Install deps**: From project root, `pip install -r requirements.txt`. If you are developing a specific service, install its dependencies with `pip install -r services/<service>/requirements.txt` (e.g., `services/retrieval/requirements.txt` includes `qdrant-client`).
+3. **Notes**: Unit tests are designed to run without Docker — they mock external service HTTP calls. For full integration testing (Qdrant + LLM + embedders) run the integration suite with the API and dependent services up.
+4. **Results**: Integration suite writes `tests/test_results.json`.

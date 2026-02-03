@@ -1,17 +1,25 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from app.embedding import BGEEmbeddings, VectorDB
 from app.retrieval import GemmaLLM
 from app.config import settings
-from app.ingestion import IngestionPipeline
 import uvicorn
+import requests
 
 app = FastAPI(title="Gemma-Qdrant RAG Service")
 
-# Initialize components
-embeddings = BGEEmbeddings()
-db = VectorDB()
+# Initialize LLM (kept local, uses external LLM service via settings)
 llm = GemmaLLM()
+
+# Service endpoints (use settings if available, fallback to Docker service names)
+INGESTION_HOST = getattr(settings, "INGESTION_HOST", "ingestion")
+INGESTION_PORT = getattr(settings, "INGESTION_PORT", 80)
+INGESTION_URL = f"http://{INGESTION_HOST}:{INGESTION_PORT}/ingest/text"
+
+EMBEDDING_URL = getattr(settings, "EMBEDDING_API_URL", None) or f"http://{getattr(settings, 'EMBEDDING_SERVICE_HOST', 'embedding-service')}:{getattr(settings, 'EMBEDDING_SERVICE_PORT', 80)}/embed"
+
+RETRIEVAL_HOST = getattr(settings, "RETRIEVAL_HOST", "retrieval")
+RETRIEVAL_PORT = getattr(settings, "RETRIEVAL_PORT", 80)
+RETRIEVAL_BASE = f"http://{RETRIEVAL_HOST}:{RETRIEVAL_PORT}"
 
 class QueryRequest(BaseModel):
     question: str
@@ -22,31 +30,22 @@ class IngestRequest(BaseModel):
 
 @app.post("/ingest")
 async def ingest_data(request: IngestRequest):
-    """Use the full ingestion pipeline for /ingest requests so behavior matches file ingestion.
-    This will apply cleaning, chunking, embedding generation, and proper metadata payloads.
-    """
+    """Proxy ingestion requests to the ingestion microservice."""
     try:
-        pipeline = IngestionPipeline()
-        doc_id = None
-        source = None
-        additional_metadata = None
-        if request.metadata:
-            additional_metadata = request.metadata
-            doc_id = request.metadata.get("doc_id")
-            source = request.metadata.get("source")
-
-        result = pipeline.ingest_text(
-            text=request.text,
-            doc_id=doc_id,
-            source=source or "api",
-            additional_metadata=additional_metadata
-        )
+        payload = {
+            "text": request.text,
+            "doc_id": request.metadata.get("doc_id") if request.metadata else None,
+            "source": request.metadata.get("source") if request.metadata else None,
+        }
+        resp = requests.post(INGESTION_URL, json=payload, timeout=60)
+        resp.raise_for_status()
+        result = resp.json()
 
         if result.get("success"):
             return {
                 "status": "success",
                 "id": result.get("doc_id"),
-                "chunks_created": result.get("chunks_created"),
+                "chunks_created": result.get("chunks_created", result.get("chunks", 0)),
             }
         else:
             raise HTTPException(status_code=500, detail=result.get("error", "ingestion failed"))
@@ -56,49 +55,57 @@ async def ingest_data(request: IngestRequest):
 @app.post("/query")
 async def query_rag(request: QueryRequest):
     try:
-        # 0. Basic Validation
         if not request.question.strip():
             return {"answer": "I'm sorry, I cannot process an empty question.", "sources": []}
 
-        # 1. Embed query
-        query_vector = embeddings.embed_query(request.question)
-        
-        # 2. Search Vector DB with dynamic settings
-        results = db.search(
-            query_vector, 
-            limit=settings.RAG_TOP_K, 
-            score_threshold=settings.RAG_THRESHOLD
-        )
-        
-        # Log scores for calibration
-        print(f"Query: '{request.question}'")
-        print(f"Hits: {[f'{r.score:.3f}' for r in results]}")
-        
-        # 3. Handle "No context found" or Low Similarity
+        # 1. Embed query via embedding microservice
+        embed_resp = requests.post(EMBEDDING_URL, json={"inputs": [request.question]}, timeout=30)
+        embed_resp.raise_for_status()
+        embeddings = embed_resp.json().get("embeddings", [])
+        if not embeddings:
+            raise HTTPException(status_code=502, detail="Embedding service returned no embeddings")
+        query_vector = embeddings[0]
+
+        # 2. Search via retrieval microservice
+        search_body = {"query_vector": query_vector, "limit": settings.RAG_TOP_K, "score_threshold": settings.RAG_THRESHOLD}
+        search_resp = requests.post(f"{RETRIEVAL_BASE}/search", json=search_body, timeout=30)
+        search_resp.raise_for_status()
+        results = search_resp.json().get("results", [])
+
         if not results:
             return {
-                "answer": "I'm sorry, I don't have enough verified context to answer this question. I can only provide information based on the documents I've been given.",
+                "answer": "I'm sorry, I don't have enough verified context to answer this question.",
                 "sources": []
             }
 
-        context = "\n".join([r.payload["text"] for r in results])
-        
-        # 4. Generate Answer
+        # Build context and source list from retrieval results
+        context_parts = []
+        sources = []
+        for r in results:
+            payload = r.get("payload") or {}
+            text = payload.get("text") if isinstance(payload, dict) else (payload or "")
+            context_parts.append(text)
+            s = {**(payload if isinstance(payload, dict) else {}), "score": r.get("score")}
+            sources.append(s)
+
+        context = "\n".join([c for c in context_parts if c])
+
+        # 3. Generate answer with LLM
         answer = llm.generate(request.question, context)
-        
-        return {
-            "answer": answer,
-            "sources": [{**r.payload, "score": r.score} for r in results]
-        }
+
+        return {"answer": answer, "sources": sources}
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.delete("/memory")
 async def clear_memory():
-    """Clear the full Qdrant vector store (all ingested documents)."""
+    """Clear the Qdrant memory by calling the retrieval service admin endpoint."""
     try:
-        db.clear()
-        return {"status": "ok", "message": "Qdrant memory cleared."}
+        resp = requests.post(f"{RETRIEVAL_BASE}/vectors/clear", timeout=30)
+        resp.raise_for_status()
+        return resp.json()
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

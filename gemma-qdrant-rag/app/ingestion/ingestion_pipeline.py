@@ -207,131 +207,48 @@ class IngestionPipeline:
         additional_metadata: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
         """
-        Ingest raw text directly (without file extraction).
-        
-        Args:
-            text: Raw text to ingest
-            doc_id: Optional document ID
-            source: Source identifier
-            additional_metadata: Additional metadata
-            
-        Returns:
-            Dictionary with ingestion results
+        Delegate ingestion of raw text to the ingestion microservice.
         """
-        logger.info(f"Starting ingestion for direct text ({len(text)} characters)")
-        
-        # Generate doc_id if not provided
+        logger.info(f"Delegating ingestion to ingestion-service ({len(text)} characters)")
+
         if not doc_id:
             doc_id = f"text_{uuid.uuid4().hex[:8]}"
-        
+
+        payload = {"text": text, "doc_id": doc_id, "source": source}
         try:
-            # Clean text
-            cleaned_text = self.cleaner.clean(text)
-            
-            # Chunk document
-            metadata = {
-                "timestamp": datetime.utcnow().isoformat(),
-                "ingestion_type": "direct_text",
-                **(additional_metadata or {})
-            }
-            
-            chunks = self.chunker.chunk_document(
-                text=cleaned_text,
-                doc_id=doc_id,
-                source=source,
-                metadata=metadata
-            )
-            
-            if not chunks:
-                return {
-                    "success": False,
-                    "error": "No chunks created (text may be too short)",
-                    "doc_id": doc_id
-                }
-            
-            # Generate embeddings
-            chunk_texts = [chunk["text"] for chunk in chunks]
-            embeddings = self.embeddings.embed_documents(chunk_texts)
-            
-            # Store in Qdrant
-            chunk_ids = [hash(chunk["chunk_id"]) % (10 ** 10) for chunk in chunks]
-            
-            # Build payloads defensively to ensure essential chunk metadata is always present
-            payloads = []
-            for idx, chunk in enumerate(chunks):
-                # Provide defaults if any keys are missing
-                doc_id_val = chunk.get("doc_id") or doc_id
-                chunk_index = chunk.get("chunk_index", idx)
-                total_chunks = chunk.get("total_chunks", len(chunks))
-                chunk_id = chunk.get("chunk_id", f"{doc_id_val}_chunk_{chunk_index}")
-                token_count = chunk.get("token_count", self.chunker.token_chunker.count_tokens(chunk.get("text", "")))
-                source_val = chunk.get("source", source)
-                timestamp_val = chunk.get("timestamp", (datetime.utcnow().isoformat()))
-
-                payload = {
-                    "text": chunk.get("text", ""),
-                    "doc_id": doc_id_val,
-                    "chunk_id": chunk_id,
-                    "chunk_index": chunk_index,
-                    "total_chunks": total_chunks,
-                    "token_count": token_count,
-                    "source": source_val,
-                    "timestamp": timestamp_val,
-                    **(additional_metadata or {})
-                }
-
-                # Log if any required metadata was missing and had to be defaulted
-                missing_keys = [k for k in ["doc_id", "chunk_id"] if not chunk.get(k)]
-                if missing_keys:
-                    logger.warning(f"Chunk {idx} missing keys {missing_keys}; defaulted values will be used.")
-
-                payloads.append(payload)
-            
-# Log payload structure for debugging: keys and a short text preview
-            try:
-                sample_payloads = [{k: (v if k != 'text' else (v[:100] + '...' if len(v) > 100 else v)) for k,v in p.items()} for p in payloads[:3]]
-                logger.info(f"Upserting payloads sample (up to 3): {sample_payloads}")
-            except Exception as e:
-                logger.warning(f"Could not log payloads: {e}")
-
-            self.vector_store.upsert(
-                ids=chunk_ids,
-                vectors=embeddings,
-                payloads=payloads
-            )
-            
-            # Verification: scroll a few points from Qdrant and log their payloads to confirm metadata persisted
-            try:
-                import requests
-                col = self.vector_store.collection_name
-                qdrant_url = f"http://{settings.QDRANT_HOST}:{settings.QDRANT_PORT}/collections/{col}/points/scroll"
-                body = {"limit": min(5, len(chunk_ids)), "with_payload": True, "with_vector": False}
-                resp = requests.post(qdrant_url, json=body, timeout=5)
-                resp.raise_for_status()
-                points = resp.json().get("result", {}).get("points", [])
-                logger.info(f"Post-upsert sample points from Qdrant (up to 5): {[p.get('payload') for p in points[:5]]}")
-            except Exception as e:
-                logger.warning(f"Could not verify points in Qdrant after upsert: {e}")
-
-            logger.info(f"Successfully stored {len(chunks)} chunks in Qdrant")
-            
-            return {
-                "success": True,
-                "doc_id": doc_id,
-                "source": source,
-                "chunks_created": len(chunks),
-                "total_characters": len(cleaned_text),
-                "chunk_ids": [chunk["chunk_id"] for chunk in chunks]
-            }
-            
+            import requests
+            ingestion_host = getattr(settings, "INGESTION_HOST", "ingestion")
+            ingestion_port = getattr(settings, "INGESTION_PORT", 80)
+            url = f"http://{ingestion_host}:{ingestion_port}/ingest/text"
+            resp = requests.post(url, json=payload, timeout=60)
+            resp.raise_for_status()
+            return resp.json()
         except Exception as e:
-            logger.error(f"Error during text ingestion: {e}", exc_info=True)
-            return {
-                "success": False,
-                "error": str(e),
-                "doc_id": doc_id
-            }
-    
+            logger.error(f"Delegated ingestion failed: {e}", exc_info=True)
+            return {"success": False, "error": str(e), "doc_id": doc_id}
+
+    def ingest_file(
+        self,
+        file_path: str,
+        doc_id: Optional[str] = None,
+        source: Optional[str] = None,
+        additional_metadata: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
+        """Ingest a single file by extracting its text and delegating to the ingestion service."""
+        logger.info(f"Starting file ingestion for: {file_path}")
+        if not doc_id:
+            doc_id = self._generate_doc_id(file_path)
+        if not source:
+            source = file_path
+        try:
+            extraction_result = self.extractor.extract(file_path)
+            if not extraction_result.get("success"):
+                return {"success": False, "error": extraction_result.get("error", "extraction failed"), "doc_id": doc_id}
+            text = extraction_result.get("text", "")
+            return self.ingest_text(text, doc_id=doc_id, source=source, additional_metadata=additional_metadata)
+        except Exception as e:
+            logger.error(f"Error during file ingestion delegation: {e}", exc_info=True)
+            return {"success": False, "error": str(e), "doc_id": doc_id}    
     def ingest_batch(
         self,
         file_paths: List[str],

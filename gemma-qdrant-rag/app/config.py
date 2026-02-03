@@ -38,6 +38,16 @@ class Settings(BaseSettings):
     RAG_THRESHOLD: float = 0.6
     RAG_TOP_K: int = 5
 
+    # --- Service hosts (for microservice delegation) ---
+    INGESTION_HOST: str = "ingestion"
+    INGESTION_PORT: int = 80
+
+    CHUNKING_HOST: str = "chunking"
+    CHUNKING_PORT: int = 80
+
+    RETRIEVAL_HOST: str = "retrieval"
+    RETRIEVAL_PORT: int = 80
+
     # --- LLM Generation Settings ---
     LLM_MAX_TOKENS: int = 512
     LLM_TEMPERATURE: float = 0.7
