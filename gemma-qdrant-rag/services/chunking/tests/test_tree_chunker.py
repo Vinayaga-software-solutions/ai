@@ -24,3 +24,5 @@ def test_tree_chunker_markdown_semantics():
     assert chunks[0]["formatting"]["bold_terms"] == ["bold"]
     assert chunks[0]["formatting"]["links"][0]["href"] == "https://example.com"
     assert chunks[0]["semantic_signals"]["bold"]["signal"] == "key_term"
+    assert chunks[0]["parent_section"] is None
+    assert chunks[0]["section_hierarchy"][0]["title"] == "Title"

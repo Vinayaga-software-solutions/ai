@@ -267,10 +267,13 @@ class TreeChunker:
             subtree_text = self._flatten_text(subtree)
             subtree_metadata = self._collect_metadata(subtree)
             semantic_metadata = interpreter.interpret(subtree_metadata)
+            heading_path = self._heading_path(subtree)
             chunk_metadata = {
                 **base_metadata,
                 **semantic_metadata,
-                "heading_path": self._heading_path(subtree),
+                "heading_path": heading_path,
+                "section_hierarchy": self._section_hierarchy(subtree),
+                "parent_section": heading_path[-2] if len(heading_path) > 1 else None,
             }
             subtree_chunks.extend(self.token_chunker.chunk_by_tokens(subtree_text, chunk_metadata))
 
@@ -323,6 +326,23 @@ class TreeChunker:
                 path.insert(0, current.text)
             current = current.parent
         return path
+
+    def _section_hierarchy(self, node: TreeNode) -> List[Dict[str, Any]]:
+        if node.node_type != "section":
+            return []
+        hierarchy: List[Dict[str, Any]] = []
+        current: Optional[TreeNode] = node
+        while current is not None:
+            if current.node_type == "section":
+                hierarchy.insert(
+                    0,
+                    {
+                        "title": current.text,
+                        "level": current.metadata.get("level"),
+                    },
+                )
+            current = current.parent
+        return hierarchy
 
 
 def re_findall(pattern: str, text: str) -> List[Any]:
