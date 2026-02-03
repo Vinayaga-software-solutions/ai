@@ -105,12 +105,20 @@ class TextExtractor:
     
     def _extract_pdf(self, path: Path, encoding: str = None) -> str:
         """Extract text from PDF files."""
-        try:
-            from pypdf import PdfReader
-        except ImportError as exc:
+        import importlib
+        import importlib.util
+
+        reader_module = None
+        if importlib.util.find_spec("pypdf") is not None:
+            reader_module = importlib.import_module("pypdf")
+        elif importlib.util.find_spec("PyPDF2") is not None:
+            reader_module = importlib.import_module("PyPDF2")
+        else:
             raise ImportError(
-                "pypdf is required for PDF ingestion. Install it with: pip install pypdf"
-            ) from exc
+                "PDF ingestion requires pypdf. Install it with: pip install pypdf"
+            )
+
+        PdfReader = reader_module.PdfReader
 
         with open(path, 'rb') as f:
             reader = PdfReader(f)
