@@ -20,7 +20,7 @@ class TextExtractor:
         '.txt': 'text',
         '.md': 'text',
         # Future support
-        # '.pdf': 'pdf',
+        '.pdf': 'pdf',
         # '.json': 'json',
         # '.csv': 'csv',
     }
@@ -29,7 +29,7 @@ class TextExtractor:
         self.extractors = {
             'text': self._extract_text,
             # Future extractors
-            # 'pdf': self._extract_pdf,
+            'pdf': self._extract_pdf,
             # 'json': self._extract_json,
         }
     
@@ -106,16 +106,38 @@ class TextExtractor:
         }
     
     # Future PDF support
-    # def _extract_pdf(self, path: Path, encoding: str = None) -> str:
-    #     """Extract text from PDF files."""
-    #     import PyPDF2
-    #     text = []
-    #     with open(path, 'rb') as f:
-    #         reader = PyPDF2.PdfReader(f)
-    #         for page in reader.pages:
-    #             text.append(page.extract_text())
-    #     return "\n".join(text)
-    
+    def _extract_pdf(self, path: Path, encoding: str = None) -> str:
+        """Extract text from PDF files."""
+        import importlib
+        import importlib.util
+
+        reader_module = None
+        if importlib.util.find_spec("pypdf") is not None:
+            reader_module = importlib.import_module("pypdf")
+        elif importlib.util.find_spec("PyPDF2") is not None:
+            reader_module = importlib.import_module("PyPDF2")
+        else:
+            raise ImportError(
+                "PDF ingestion requires pypdf. Install it with: pip install pypdf"
+            )
+
+        PdfReader = reader_module.PdfReader
+
+        with open(path, 'rb') as f:
+            reader = PdfReader(f)
+            if reader.is_encrypted:
+                raise ValueError("Encrypted PDFs are not supported.")
+
+            extracted_pages = []
+            for page in reader.pages:
+                page_text = page.extract_text() or ""
+                extracted_pages.append(page_text)
+
+        combined_text = "\n".join(extracted_pages).strip()
+        if not combined_text:
+            raise ValueError("PDF contains no extractable text (possible scanned images).")
+
+        return combined_text
     # Future JSON support
     # def _extract_json(self, path: Path, encoding: str) -> str:
     #     """Extract text from JSON files."""
