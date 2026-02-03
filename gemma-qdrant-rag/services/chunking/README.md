@@ -32,3 +32,8 @@ curl -X POST http://localhost:8011/chunk/tree \
     }
   }'
 ```
+
+Relationship metadata:
+- `heading_path` provides the full path of headings for a chunk.
+- `parent_section` captures the immediate parent heading (if any).
+- `section_hierarchy` includes heading titles and levels for the subtree lineage.
