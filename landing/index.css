@@ -205,6 +205,80 @@ ul {
     gap: 2rem;
 }
 
+.hero-visual {
+    position: relative;
+    border-radius: calc(var(--card-radius) + 8px);
+    padding: 2.5rem;
+    background: radial-gradient(circle at 20% 20%, rgba(59, 108, 255, 0.18), transparent 55%),
+        linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(245, 247, 251, 0.6));
+    border: 1px solid rgba(59, 108, 255, 0.2);
+    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
+    overflow: hidden;
+    min-height: 280px;
+    display: grid;
+    place-items: center;
+    animation: float 8s ease-in-out infinite;
+}
+
+.hero-visual__base,
+.hero-visual__glow {
+    width: min(420px, 100%);
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+.hero-visual__base {
+    position: relative;
+    z-index: 2;
+    filter: saturate(1.1) drop-shadow(0 20px 35px rgba(15, 23, 42, 0.18));
+}
+
+.hero-visual__glow {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: min(520px, 120%);
+    opacity: 0.55;
+    mix-blend-mode: screen;
+    animation: glow 6s ease-in-out infinite;
+}
+
+.hero-orbits span {
+    position: absolute;
+    border-radius: 999px;
+    border: 1px solid rgba(59, 108, 255, 0.4);
+    box-shadow: 0 0 40px rgba(59, 108, 255, 0.35);
+    animation: orbit 10s linear infinite;
+}
+
+.hero-orbits span:nth-child(1) {
+    width: 200px;
+    height: 200px;
+    top: 12%;
+    left: 20%;
+    opacity: 0.35;
+}
+
+.hero-orbits span:nth-child(2) {
+    width: 260px;
+    height: 260px;
+    bottom: -10%;
+    right: 15%;
+    opacity: 0.25;
+    animation-duration: 14s;
+}
+
+.hero-orbits span:nth-child(3) {
+    width: 160px;
+    height: 160px;
+    top: 55%;
+    left: 8%;
+    opacity: 0.22;
+    animation-duration: 12s;
+    animation-direction: reverse;
+}
+
 .panel-card {
     background: var(--panel-strong);
     border: 1px solid var(--border-strong);
@@ -259,6 +333,48 @@ ul {
     border-radius: var(--card-radius);
     padding: 1.5rem;
     box-shadow: var(--card-shadow);
+}
+
+@keyframes float {
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes glow {
+    0%,
+    100% {
+        opacity: 0.45;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.7;
+        transform: scale(1.03);
+    }
+}
+
+@keyframes orbit {
+    0% {
+        transform: translate(0, 0);
+    }
+    50% {
+        transform: translate(12px, -8px);
+    }
+    100% {
+        transform: translate(0, 0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-visual,
+    .hero-visual__glow,
+    .hero-orbits span {
+        animation: none;
+    }
 }
 
 .section {
