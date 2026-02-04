@@ -1,17 +1,17 @@
 :root {
-    --bg-primary: #0b0f1a;
-    --bg-secondary: #121826;
-    --panel: #141b2b;
-    --panel-strong: #101726;
-    --accent: #5b7bff;
-    --accent-soft: rgba(91, 123, 255, 0.2);
-    --text-primary: #f5f7ff;
-    --text-secondary: #b7c0d8;
-    --text-muted: #7f8aaa;
-    --border-color: rgba(255, 255, 255, 0.1);
-    --border-strong: rgba(255, 255, 255, 0.18);
+    --bg-primary: #f5f7fb;
+    --bg-secondary: #ffffff;
+    --panel: #ffffff;
+    --panel-strong: #ffffff;
+    --accent: #3b6cff;
+    --accent-soft: rgba(59, 108, 255, 0.12);
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
+    --border-color: rgba(15, 23, 42, 0.1);
+    --border-strong: rgba(15, 23, 42, 0.16);
     --card-radius: 16px;
-    --card-shadow: 0 10px 30px rgba(5, 8, 16, 0.35);
+    --card-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
     --font-main: 'Outfit', sans-serif;
     --font-mono: 'Roboto Mono', monospace;
     --transition: 0.3s ease;
@@ -25,7 +25,7 @@
 
 body {
     font-family: var(--font-main);
-    background: radial-gradient(circle at top, rgba(91, 123, 255, 0.15), transparent 45%),
+    background: radial-gradient(circle at top, rgba(59, 108, 255, 0.12), transparent 45%),
         var(--bg-primary);
     color: var(--text-primary);
     line-height: 1.6;
@@ -48,9 +48,10 @@ ul {
     align-items: center;
     justify-content: space-between;
     padding: 1.5rem 4rem;
-    background: rgba(11, 15, 26, 0.9);
-    backdrop-filter: blur(16px);
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(18px);
     border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
 }
 
 .logo {
@@ -70,6 +71,7 @@ ul {
     color: var(--text-secondary);
     flex-wrap: wrap;
     justify-content: flex-end;
+    row-gap: 0.8rem;
 }
 
 .nav-btn {
@@ -78,6 +80,7 @@ ul {
     background: var(--accent);
     color: #fff;
     font-weight: 600;
+    box-shadow: 0 10px 18px rgba(59, 108, 255, 0.2);
 }
 
 .hero {
@@ -118,6 +121,7 @@ ul {
     color: var(--accent);
     font-size: 0.85rem;
     margin-bottom: 1.5rem;
+    font-weight: 600;
 }
 
 .hero-actions {
@@ -144,6 +148,7 @@ ul {
 .btn.ghost {
     border: 1px solid var(--border-color);
     color: var(--text-primary);
+    background: #fff;
 }
 
 .trust-row {
@@ -214,10 +219,11 @@ ul {
 }
 
 .panel-mini {
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--panel);
     border: 1px solid var(--border-strong);
     border-radius: var(--card-radius);
     padding: 1.5rem;
+    box-shadow: var(--card-shadow);
 }
 
 .section {
@@ -225,7 +231,7 @@ ul {
 }
 
 .section.alt {
-    background: linear-gradient(180deg, rgba(18, 24, 38, 0.95), rgba(11, 15, 26, 0.92));
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(245, 247, 251, 0.85));
 }
 
 .section-heading {
@@ -250,7 +256,7 @@ ul {
     padding: 1rem 1.4rem;
     border-radius: var(--card-radius);
     border: 1px solid var(--border-strong);
-    background: rgba(91, 123, 255, 0.12);
+    background: rgba(59, 108, 255, 0.08);
     color: var(--text-primary);
     margin-bottom: 2.5rem;
     box-shadow: var(--card-shadow);
@@ -298,7 +304,7 @@ ul {
 }
 
 .issue-card {
-    background: var(--panel-strong);
+    background: var(--panel);
     border: 1px solid var(--border-strong);
     border-radius: var(--card-radius);
     padding: 2rem;
@@ -325,7 +331,7 @@ ul {
 }
 
 .capability-card {
-    background: var(--panel-strong);
+    background: var(--panel);
     border: 1px solid var(--border-strong);
     border-radius: var(--card-radius);
     padding: 1.8rem;
@@ -349,10 +355,11 @@ ul {
 }
 
 .step-card {
-    background: transparent;
-    border: none;
-    border-left: 2px solid rgba(91, 123, 255, 0.3);
-    padding: 0.6rem 0 0.6rem 1.2rem;
+    background: var(--panel);
+    border: 1px solid var(--border-strong);
+    border-radius: 14px;
+    padding: 1.4rem;
+    box-shadow: var(--card-shadow);
 }
 
 .step-card span {
@@ -371,7 +378,7 @@ ul {
 }
 
 .use-case-card {
-    background: var(--panel-strong);
+    background: var(--panel);
     border: 1px solid var(--border-strong);
     border-radius: var(--card-radius);
     padding: 1.8rem;
@@ -384,7 +391,7 @@ ul {
 }
 
 .det-card {
-    background: var(--panel-strong);
+    background: var(--panel);
     border: 1px solid var(--border-strong);
     border-radius: var(--card-radius);
     padding: 2rem;
@@ -406,7 +413,7 @@ ul {
 }
 
 .defense-card {
-    background: var(--panel-strong);
+    background: var(--panel);
     border: 1px solid var(--border-strong);
     border-radius: var(--card-radius);
     padding: 1.8rem;
@@ -429,7 +436,7 @@ ul {
 }
 
 .code-panel {
-    background: #0c111f;
+    background: #f8fafc;
     border: 1px solid var(--border-strong);
     border-radius: var(--card-radius);
     padding: 2rem;
@@ -484,7 +491,7 @@ ul {
 }
 
 .signup-form {
-    background: var(--panel-strong);
+    background: var(--panel);
     border: 1px solid var(--border-strong);
     border-radius: var(--card-radius);
     padding: 2rem;
@@ -504,7 +511,7 @@ ul {
     padding: 0.8rem 1rem;
     border-radius: 12px;
     border: 1px solid var(--border-color);
-    background: transparent;
+    background: #f8fafc;
     color: var(--text-primary);
     font-size: 1rem;
 }
@@ -517,7 +524,7 @@ ul {
     justify-content: space-between;
     gap: 1rem;
     align-items: center;
-    background: rgba(255, 255, 255, 0.02);
+    background: #f8fafc;
     flex-wrap: wrap;
 }
 
@@ -572,7 +579,7 @@ ul {
 
 footer {
     padding: 4rem;
-    background: #0b0f1a;
+    background: #ffffff;
     border-top: 1px solid var(--border-color);
 }
 
@@ -641,6 +648,11 @@ footer {
         padding: 1.5rem 2rem;
     }
 
+    .nav-links {
+        justify-content: center;
+        text-align: center;
+    }
+
     .hero,
     .section,
     footer {
@@ -661,10 +673,10 @@ footer {
     .panel-card,
     .panel-mini,
     .signup-form {
-        box-shadow: none;
+        box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
         border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        background: #ffffff;
     }
 
     .section-heading {
