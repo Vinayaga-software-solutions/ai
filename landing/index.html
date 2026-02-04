@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TensrGrid | Private AI Infrastructure</title>
+    <title>TensrGrid | Deterministic Private AI Infrastructure</title>
     <meta name="description"
-        content="TensrGrid is private AI infrastructure for enterprises. Bring your data, we deliver intelligence, governance, and security in an isolated environment.">
+        content="TensrGrid is deterministic, private AI infrastructure for enterprises. Bring your data and get governed intelligence in an isolated environment.">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,295 +20,252 @@
 
 <body>
     <!-- Navigation -->
-    <nav class="glass">
+    <nav class="nav-shell">
         <div class="logo">Tensr<span>Grid</span></div>
-        <div class="nav-links" style="display: flex; gap: 2rem; align-items: center;">
-            <a href="#vision" class="mono" style="margin-bottom: 0;">Why TensrGrid</a>
-            <a href="#platform" class="mono" style="margin-bottom: 0;">Platform</a>
-            <a href="#plan" class="mono" style="margin-bottom: 0;">Plan</a>
-            <a href="#governance" class="mono" style="margin-bottom: 0;">Security</a>
+        <div class="nav-links">
+            <a href="#outcomes">Outcomes</a>
+            <a href="#platform">Platform</a>
+            <a href="#deterministic">Deterministic</a>
             <a href="#signup" class="nav-btn">Request Access</a>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero section"
-        style="min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; padding-top: 120px;">
-        <div class="background-glow"
-            style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: -1;">
-            <div
-                style="position: absolute; top: 10%; left: -5%; width: 50vw; height: 50vw; background: radial-gradient(circle, rgba(0, 98, 255, 0.05) 0%, transparent 70%); filter: blur(80px);">
+    <section class="hero">
+        <div class="hero-grid">
+            <div class="hero-copy">
+                <span class="badge">Private AI Infrastructure</span>
+                <h1>Deterministic private AI, built around your data.</h1>
+                <p>
+                    TensrGrid is the enterprise private AI stack that keeps your data isolated, builds your data model,
+                    fine-tunes intelligence, and enforces governance by default. You bring the data. We bring
+                    deterministic intelligence.
+                </p>
+                <div class="hero-actions">
+                    <a class="btn primary" href="#signup">Request access</a>
+                    <a class="btn ghost" href="#platform">Explore platform</a>
+                </div>
+                <div class="trust-row">
+                    <div>
+                        <strong>Zero data sharing</strong>
+                        <span>Isolation-first environments</span>
+                    </div>
+                    <div>
+                        <strong>Deterministic answers</strong>
+                        <span>Governed, auditable outputs</span>
+                    </div>
+                </div>
             </div>
-            <div
-                style="position: absolute; bottom: 0%; right: -5%; width: 50vw; height: 50vw; background: radial-gradient(circle, rgba(124, 77, 255, 0.05) 0%, transparent 70%); filter: blur(80px);">
-            </div>
-        </div>
-
-        <div class="container" style="display: flex; flex-direction: column; align-items: center; text-align: center;">
-            <span class="mono reveal">Private AI Infrastructure</span>
-            <h1 class="hero-title reveal">Bring Your Data.<br><span
-                    style="background: linear-gradient(90deg, var(--text-primary), var(--text-secondary)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">We Bring Intelligence.</span></h1>
-            <p class="hero-subtitle reveal">
-                TensrGrid builds secure, isolated AI infrastructure for enterprises. You provide trusted data. We deliver
-                intelligence, governance, and private AI tuned to your business — without exposing it to the public web.
-            </p>
-            <div class="hero-actions reveal" style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
-                <a class="btn btn-primary glass" href="#signup">Request Access</a>
-                <a class="btn btn-outline glass" href="#platform">Explore Platform</a>
-            </div>
-
-            <div class="hero-image reveal"
-                style="margin-top: 6rem; width: 100%; max-width: 1100px; perspective: 1200px;">
-                <img src="assets/hero_light.png" alt="TensrGrid private AI infrastructure"
-                    style="width: 100%; height: auto; border-radius: 24px; box-shadow: 0 40px 100px rgba(0,0,0,0.08), 0 0 40px rgba(0,98,255,0.05); transform: rotateX(8deg); animation: float 6s ease-in-out infinite;">
+            <div class="hero-panel">
+                <div class="panel-card">
+                    <div class="panel-header">TensrGrid Control Plane</div>
+                    <div class="panel-body">
+                        <div class="panel-item">
+                            <span class="panel-label">Data Intake</span>
+                            <span class="panel-value">Approved sources only</span>
+                        </div>
+                        <div class="panel-item">
+                            <span class="panel-label">Model Layer</span>
+                            <span class="panel-value">Private fine-tuning</span>
+                        </div>
+                        <div class="panel-item">
+                            <span class="panel-label">Governance</span>
+                            <span class="panel-value">Policy-driven enforcement</span>
+                        </div>
+                        <div class="panel-item">
+                            <span class="panel-label">Output</span>
+                            <span class="panel-value">Deterministic answers</span>
+                        </div>
+                    </div>
+                    <div class="panel-footer">STATUS: ISOLATED</div>
+                </div>
+                <div class="panel-grid">
+                    <div class="panel-mini">
+                        <h4>Private-by-design</h4>
+                        <p>Single-tenant environments with hardened access control.</p>
+                    </div>
+                    <div class="panel-mini">
+                        <h4>Built for governance</h4>
+                        <p>Every response is auditable, with clear refusal paths.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Vision Section -->
-    <section id="vision" class="section">
-        <div class="container">
-            <div style="text-align: center; margin-bottom: 4rem;">
-                <span class="mono">From the enterprise perspective</span>
-                <h2 style="font-size: 3rem;">What I need from AI</h2>
-            </div>
-            <div class="grid grid-3">
-                <div class="reveal">
-                    <span class="mono">Need 01</span>
-                    <h3>Private by design</h3>
-                    <p style="color: var(--text-secondary); margin-top: 1rem;">I need AI that keeps our data inside an
-                        isolated environment, with zero data sharing or external training.</p>
-                </div>
-                <div class="reveal">
-                    <span class="mono">Need 02</span>
-                    <h3>Intelligence with control</h3>
-                    <p style="color: var(--text-secondary); margin-top: 1rem;">I need a partner to build our data model
-                        and fine-tuning workflows so the AI behaves the way our business expects.</p>
-                </div>
-                <div class="reveal">
-                    <span class="mono">Need 03</span>
-                    <h3>Governance that proves trust</h3>
-                    <p style="color: var(--text-secondary); margin-top: 1rem;">I need policy-based guardrails, audit
-                        trails, and clear refusals when data is missing.</p>
-                </div>
-            </div>
+    <!-- Outcomes Section -->
+    <section id="outcomes" class="section">
+        <div class="section-heading">
+            <span class="eyebrow">User perspective</span>
+            <h2>What I need from a private AI partner</h2>
+        </div>
+        <div class="card-grid">
+            <article class="card">
+                <h3>Isolation by default</h3>
+                <p>My data never trains external models. Everything stays inside an isolated environment we control.</p>
+            </article>
+            <article class="card">
+                <h3>Intelligence we can trust</h3>
+                <p>TensrGrid builds our data model and fine-tunes intelligence so the AI behaves like our business.</p>
+            </article>
+            <article class="card">
+                <h3>Deterministic governance</h3>
+                <p>Clear policies, auditable trails, and deterministic answers or safe refusals—no guesswork.</p>
+            </article>
         </div>
     </section>
 
     <!-- Platform Section -->
-    <section id="platform" class="section" style="background: var(--bg-secondary);">
-        <div class="container">
-            <div style="margin-bottom: 4rem; text-align: center;">
-                <span class="mono">Private AI platform</span>
-                <h2 style="font-size: 3rem;">Your isolated AI<br>infrastructure stack</h2>
-                <p style="color: var(--text-secondary); max-width: 720px; margin: 1.5rem auto 0;">
-                    TensrGrid delivers private AI infrastructure that starts with your data and ends with intelligent,
-                    governed outcomes your teams can trust.
-                </p>
+    <section id="platform" class="section alt">
+        <div class="section-heading">
+            <span class="eyebrow">Platform</span>
+            <h2>We bring the intelligence layer</h2>
+            <p>
+                TensrGrid delivers an end-to-end private AI platform: secure data onboarding, model tuning, and
+                governance that stays deterministic even at scale.
+            </p>
+        </div>
+        <div class="stack-grid">
+            <div class="stack-card">
+                <h4>Isolated infrastructure</h4>
+                <ul>
+                    <li>Single-tenant compute</li>
+                    <li>Private network segmentation</li>
+                    <li>Zero outbound data sharing</li>
+                </ul>
             </div>
-
-            <div style="display: flex; flex-direction: column; gap: 4rem;">
-                <!-- Layer 1 -->
-                <div class="reveal glass"
-                    style="padding: 3rem; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;">
-                    <div>
-                        <span class="mono">Capability 01</span>
-                        <h3 style="font-size: 2rem; margin-bottom: 1rem;">Private AI infrastructure</h3>
-                        <p style="color: var(--text-secondary);">Dedicated environments built for enterprise data. Your
-                            models and data stay isolated with no external exposure.</p>
-                        <ul style="margin-top: 2rem; list-style: none; color: var(--text-secondary);">
-                            <li style="margin-bottom: 0.5rem;">• Single-tenant environments</li>
-                            <li style="margin-bottom: 0.5rem;">• Private network isolation</li>
-                            <li>• Zero outbound data sharing</li>
-                        </ul>
-                    </div>
-                    <div
-                        style="background: rgba(255,255,255,0.05); height: 300px; border-radius: 12px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-blue);">
-                        [ ISOLATED_INFRASTRUCTURE ]
-                    </div>
-                </div>
-
-                <!-- Layer 2 -->
-                <div class="reveal glass"
-                    style="padding: 3rem; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;">
-                    <div style="order: 2;">
-                        <span class="mono">Capability 02</span>
-                        <h3 style="font-size: 2rem; margin-bottom: 1rem;">Data model + intelligence</h3>
-                        <p style="color: var(--text-secondary);">We build the data model, fine-tuning workflows, and
-                            intelligent context so your AI is tuned for enterprise outcomes.</p>
-                        <ul style="margin-top: 2rem; list-style: none; color: var(--text-secondary);">
-                            <li style="margin-bottom: 0.5rem;">• Secure data onboarding</li>
-                            <li style="margin-bottom: 0.5rem;">• Business-specific intelligence</li>
-                            <li>• Enterprise-grade tuning</li>
-                        </ul>
-                    </div>
-                    <div
-                        style="background: rgba(0,0,0,0.02); height: 300px; border-radius: 12px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-blue);">
-                        [ INTELLIGENCE_ENGINE ]
-                    </div>
-                </div>
+            <div class="stack-card">
+                <h4>Data model & tuning</h4>
+                <ul>
+                    <li>Enterprise data modeling</li>
+                    <li>Private fine-tuning workflows</li>
+                    <li>Business-aligned intelligence</li>
+                </ul>
+            </div>
+            <div class="stack-card">
+                <h4>Governance controls</h4>
+                <ul>
+                    <li>Policy-based routing</li>
+                    <li>Audit-ready outputs</li>
+                    <li>Deterministic refusals</li>
+                </ul>
             </div>
         </div>
     </section>
 
-    <!-- Plan Section -->
-    <section id="plan" class="section">
-        <div class="container" style="text-align: center;">
-            <span class="mono">Engagement plan</span>
-            <h2 style="font-size: 3rem; margin-bottom: 4rem;">How TensrGrid delivers value</h2>
-
-            <div class="grid grid-3">
-                <div class="reveal glass feature-card">
-                    <h4>1. You bring trusted data</h4>
-                    <p>Connect your internal systems in a secure, isolated environment. We scope what is approved to
-                        use and protect what is sensitive.</p>
-                </div>
-                <div class="reveal glass feature-card" style="border-color: var(--accent-blue);">
-                    <h4>2. We build intelligence</h4>
-                    <p>Our team designs the data model, fine-tunes the AI, and builds intelligent workflows that reflect
-                        your business logic.</p>
-                </div>
-                <div class="reveal glass feature-card">
-                    <h4>3. Governed private AI</h4>
-                    <p>Deploy with policy guardrails, audit trails, and clear refusals. Every answer is controlled and
-                        enterprise-ready.</p>
-                </div>
+    <!-- Deterministic Section -->
+    <section id="deterministic" class="section">
+        <div class="section-heading split">
+            <div>
+                <span class="eyebrow">Deterministic by design</span>
+                <h2>Every answer is governed, or refused.</h2>
+            </div>
+            <p>
+                TensrGrid enforces deterministic behavior with confidence gates, policy checks, and audit trails. If the
+                data is missing, the system refuses instead of guessing.
+            </p>
+        </div>
+        <div class="deterministic-grid">
+            <div class="det-card">
+                <span>01</span>
+                <h4>Confidence gates</h4>
+                <p>Responses are allowed only when confidence thresholds are met.</p>
+            </div>
+            <div class="det-card">
+                <span>02</span>
+                <h4>Policy enforcement</h4>
+                <p>Access is governed by role, data scope, and security rules.</p>
+            </div>
+            <div class="det-card">
+                <span>03</span>
+                <h4>Audit-ready outputs</h4>
+                <p>Every response includes traceability for security reviews.</p>
             </div>
         </div>
-    </section>
-
-    <!-- Governance Section -->
-    <section id="governance" class="section" style="background: var(--bg-secondary);">
-        <div class="container" style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 6rem; align-items: center;">
-            <div class="reveal">
-                <span class="mono">Security & Governance</span>
-                <h2 style="font-size: 3rem; margin-bottom: 1.5rem;">Private, secure, and accountable</h2>
-                <p style="color: var(--text-secondary); margin-bottom: 2rem;">TensrGrid gives your teams AI that refuses
-                    when data is missing and proves every answer with traceable governance.</p>
-
-                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-                    <div style="display: flex; gap: 1rem;">
-                        <div style="width: 24px; height: 24px; background: var(--accent-blue); border-radius: 4px;">
-                        </div>
-                        <div>
-                            <h5 style="font-size: 1rem;">Role-based access control</h5>
-                            <p style="font-size: 0.9rem; color: var(--text-muted);">Only approved roles can access
-                                sensitive AI workflows.</p>
-                        </div>
-                    </div>
-                    <div style="display: flex; gap: 1rem;">
-                        <div style="width: 24px; height: 24px; background: var(--accent-purple); border-radius: 4px;">
-                        </div>
-                        <div>
-                            <h5 style="font-size: 1rem;">Audit-ready decision trails</h5>
-                            <p style="font-size: 0.9rem; color: var(--text-muted);">Every response is tracked with clear
-                                governance and security logs.</p>
-                        </div>
-                    </div>
-                    <div style="display: flex; gap: 1rem;">
-                        <div style="width: 24px; height: 24px; background: var(--accent-blue); border-radius: 4px;">
-                        </div>
-                        <div>
-                            <h5 style="font-size: 1rem;">Confidence-based refusals</h5>
-                            <p style="font-size: 0.9rem; color: var(--text-muted);">If the system isn’t confident, it
-                                refuses instead of guessing.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="reveal code-card">
-                <div class="comment">// Governance Example</div>
-                <div><span class="keyword">if</span> (request.intent === <span class="string">'CONFIDENTIAL_DATA'</span>) {
-                </div>
-                <div style="padding-left: 1.5rem;"><span class="keyword">if</span> (!user.hasRole(<span
-                        class="string">'AUTHORIZED_OWNER'</span>)) {</div>
-                <div style="padding-left: 3rem;"><span class="keyword">return</span> refuse(<span
-                        class="string">"Access denied"</span>, code: <span class="value">403</span>);</div>
-                <div style="padding-left: 1.5rem;">}</div>
-                <div>}</div>
-
-                <div class="status-tag">STATUS: PRIVATE</div>
-            </div>
+        <div class="code-panel">
+            <div class="code-line">if request.intent == "CONFIDENTIAL_DATA":</div>
+            <div class="code-line indent">if not user.has_role("AUTHORIZED_OWNER"):</div>
+            <div class="code-line indent-2">return refuse("Access denied", code=403)</div>
+            <div class="code-line">if confidence_score &lt; 0.8:</div>
+            <div class="code-line indent">return refuse("Insufficient evidence")</div>
+            <div class="code-status">DETERMINISTIC ENFORCEMENT</div>
         </div>
     </section>
 
     <!-- Signup Section -->
-    <section id="signup" class="section">
-        <div class="container">
-            <div class="cta-banner" style="text-align: left;">
-                <span class="mono">Request access</span>
-                <h2 style="font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 1.5rem; letter-spacing: -0.05em;">Start
-                    your private AI journey</h2>
-                <p style="color: var(--text-secondary); max-width: 720px; margin-bottom: 2.5rem;">Tell us about your
-                    company and we’ll design a private AI environment built around your data, intelligence, and
-                    governance requirements.</p>
-
-                <form class="form-card glass" aria-label="TensrGrid signup form">
-                    <div class="form-grid">
-                        <label class="form-field">
-                            <span class="form-label">Work email</span>
-                            <input class="form-input" type="email" name="email" placeholder="you@company.com" required>
-                        </label>
-                        <label class="form-field">
-                            <span class="form-label">Company name</span>
-                            <input class="form-input" type="text" name="company" placeholder="Company, Inc." required>
-                        </label>
+    <section id="signup" class="section alt">
+        <div class="signup-shell">
+            <div>
+                <span class="eyebrow">Request access</span>
+                <h2>Start your private AI deployment</h2>
+                <p>Share your company details and we will design an isolated, deterministic AI environment tailored to
+                    your data and governance requirements.</p>
+                <div class="signup-notes">
+                    <div>
+                        <strong>Private onboarding</strong>
+                        <span>Dedicated security review and approval</span>
                     </div>
-                    <div class="recaptcha-box">
-                        <label class="recaptcha-label">
-                            <input type="checkbox" required>
-                            <span>I'm not a robot</span>
-                        </label>
-                        <div class="recaptcha-meta">
-                            <span>Protected by reCAPTCHA</span>
-                            <span class="recaptcha-note">Privacy • Terms</span>
-                        </div>
+                    <div>
+                        <strong>Enterprise readiness</strong>
+                        <span>Deployment aligned to compliance needs</span>
                     </div>
-                    <button class="btn btn-primary" type="submit">Request access</button>
-                    <p class="form-disclaimer">We’ll only use your information to contact you about TensrGrid. Your data
-                        stays private.</p>
-                </form>
+                </div>
             </div>
+            <form class="signup-form" aria-label="TensrGrid signup form">
+                <label>
+                    Work email
+                    <input type="email" name="email" placeholder="you@company.com" required>
+                </label>
+                <label>
+                    Company name
+                    <input type="text" name="company" placeholder="Company, Inc." required>
+                </label>
+                <div class="recaptcha-box">
+                    <label class="recaptcha-label">
+                        <input type="checkbox" required>
+                        <span>I'm not a robot</span>
+                    </label>
+                    <div class="recaptcha-meta">
+                        <span>Protected by reCAPTCHA</span>
+                        <span>Privacy • Terms</span>
+                    </div>
+                </div>
+                <button class="btn primary" type="submit">Request access</button>
+                <p class="form-disclaimer">We will only use your information to contact you about TensrGrid. Your data
+                    stays private.</p>
+            </form>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer style="padding: 4rem 0; border-top: 1px solid var(--border-color);">
-        <div class="container">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 2rem; flex-wrap: wrap;">
-                <div>
-                    <div class="logo" style="margin-bottom: 1rem;">Tensr<span>Grid</span></div>
-                    <p style="color: var(--text-muted); font-size: 0.9rem; max-width: 320px;">Private AI infrastructure
-                        for enterprises that demand security, governance, and intelligent outcomes.</p>
-                </div>
-                <div style="display: flex; gap: 4rem; flex-wrap: wrap;">
-                    <div>
-                        <span class="mono" style="font-size: 0.7rem;">Platform</span>
-                        <ul
-                            style="list-style: none; margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.9rem; color: var(--text-secondary);">
-                            <li>Infrastructure</li>
-                            <li>Intelligence</li>
-                            <li>Governance</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <span class="mono" style="font-size: 0.7rem;">Company</span>
-                        <ul
-                            style="list-style: none; margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.9rem; color: var(--text-secondary);">
-                            <li>Security</li>
-                            <li>Privacy</li>
-                            <li>Contact</li>
-                        </ul>
-                    </div>
-                </div>
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <div class="logo">Tensr<span>Grid</span></div>
+                <p>Private AI infrastructure for enterprises that need deterministic governance and isolated
+                    intelligence.</p>
             </div>
-            <div
-                style="margin-top: 4rem; display: flex; justify-content: space-between; align-items: center; color: var(--text-muted); font-size: 0.8rem; flex-wrap: wrap; gap: 1rem;">
-                <p>&copy; 2026 TensrGrid Systems Inc. All rights reserved.</p>
-                <div style="display: flex; gap: 2rem;">
-                    <span>Privacy Policy</span>
-                    <span>Terms of Service</span>
-                </div>
+            <div>
+                <span class="eyebrow">Platform</span>
+                <ul>
+                    <li>Infrastructure</li>
+                    <li>Data modeling</li>
+                    <li>Governance</li>
+                </ul>
+            </div>
+            <div>
+                <span class="eyebrow">Company</span>
+                <ul>
+                    <li>Security</li>
+                    <li>Privacy</li>
+                    <li>Contact</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-meta">
+            <span>&copy; 2026 TensrGrid Systems Inc. All rights reserved.</span>
+            <div class="footer-links">
+                <span>Privacy Policy</span>
+                <span>Terms of Service</span>
             </div>
         </div>
     </footer>
