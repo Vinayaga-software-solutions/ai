@@ -303,12 +303,19 @@ ul {
     gap: 2rem;
 }
 
+.issue-grid,
+.use-case-grid,
+.deterministic-grid {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
 .issue-card {
-    background: var(--panel);
-    border: 1px solid var(--border-strong);
-    border-radius: var(--card-radius);
-    padding: 2rem;
-    box-shadow: var(--card-shadow);
+    background: transparent;
+    border: none;
+    border-left: 3px solid rgba(59, 108, 255, 0.25);
+    border-radius: 0;
+    padding: 0 0 0 1.5rem;
+    box-shadow: none;
 }
 
 .issue-card span {
@@ -351,15 +358,16 @@ ul {
 }
 
 .step-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
 .step-card {
-    background: var(--panel);
-    border: 1px solid var(--border-strong);
-    border-radius: 14px;
-    padding: 1.4rem;
-    box-shadow: var(--card-shadow);
+    background: transparent;
+    border: none;
+    border-left: 3px solid rgba(59, 108, 255, 0.25);
+    border-radius: 0;
+    padding: 0 0 0 1.5rem;
+    box-shadow: none;
 }
 
 .step-card span {
@@ -378,11 +386,12 @@ ul {
 }
 
 .use-case-card {
-    background: var(--panel);
-    border: 1px solid var(--border-strong);
-    border-radius: var(--card-radius);
-    padding: 1.8rem;
-    box-shadow: var(--card-shadow);
+    background: transparent;
+    border: none;
+    border-left: 3px solid rgba(59, 108, 255, 0.25);
+    border-radius: 0;
+    padding: 0 0 0 1.5rem;
+    box-shadow: none;
 }
 
 .use-case-card p {
@@ -391,11 +400,12 @@ ul {
 }
 
 .det-card {
-    background: var(--panel);
-    border: 1px solid var(--border-strong);
-    border-radius: var(--card-radius);
-    padding: 2rem;
-    box-shadow: var(--card-shadow);
+    background: transparent;
+    border: none;
+    border-left: 3px solid rgba(59, 108, 255, 0.25);
+    border-radius: 0;
+    padding: 0 0 0 1.5rem;
+    box-shadow: none;
 }
 
 .det-card span {
