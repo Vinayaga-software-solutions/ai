@@ -18,15 +18,21 @@
     <!-- Navigation -->
     <nav class="nav-shell">
         <div class="logo">Tensr<span>Grid</span></div>
-        <div class="nav-links">
+        <button class="nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false"
+            aria-controls="nav-links">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <div class="nav-links" id="nav-links">
             <a href="#issues">Challenges</a>
             <a href="#capabilities">Capabilities</a>
             <a href="#audience">Users</a>
             <a href="#architecture">Architecture</a>
             <a href="#use-cases">Use Cases</a>
-            <a href="#deterministic">Deterministic</a>
+            <!-- <a href="#deterministic">Deterministic</a> -->
             <a href="#faq">FAQ</a>
-            <a href="#signup" class="nav-btn">Request Access</a>
+            <a href="#signup" class="nav-btn">Join Private Beta</a>
         </div>
     </nav>
 
@@ -43,8 +49,8 @@
                         We bring intelligence.</span>
                 </p>
                 <div class="hero-actions">
-                    <a class="btn primary" href="#signup">Request access</a>
-                    <a class="btn ghost" href="#capabilities">Explore platform</a>
+                    <a class="btn primary" href="#signup">Join Private Beta</a>
+                    <!-- <a class="btn ghost" href="#capabilities">Explore platform</a> -->
                 </div>
                 <div class="trust-row">
                     <div>
@@ -67,7 +73,7 @@
                     <div class="panel-body">
                         <div class="panel-item">
                             <span class="panel-label">Data Sync</span>
-                            <span class="panel-value">Easy ingestion + lineage preservation</span>
+                            <span class="panel-value">Easy ingestion, lineage preservation</span>
                         </div>
                         <div class="panel-item">
                             <span class="panel-label">intelligence Governance</span>
@@ -75,7 +81,7 @@
                         </div>
                         <div class="panel-item">
                             <span class="panel-label">Deterministic</span>
-                            <span class="panel-value">Context aware intelligence + refusals</span>
+                            <span class="panel-value">Context aware intelligence,  refusals</span>
                         </div>
                         <div class="panel-item">
                             <span class="panel-label">Deployment</span>
@@ -94,8 +100,8 @@
                         <p>Every answer is logged, traceable, and either approved or refused.</p>
                     </div>
                     <div class="panel-mini">
-                        <h4>Extend</h4>
-                        <p>Customize and extend the platform to fit your specific use cases.</p>
+                        <h4>Operate</h4>
+                        <p>Use as managed platform or Hosted based on your use cases.</p>
                     </div>
                 </div>
             </div>
@@ -106,7 +112,7 @@
     <section id="issues" class="section alt">
         <div class="section-heading">
             <span class="eyebrow">Why AI projects stalls</span>
-            <h2>Issues that block production-grade private AI</h2>
+            <h2>Issues that block production-grade AI</h2>
             <p>We designed TensrGrid to address the exact gaps.</p>
         </div>
         <div class="issue-grid">
@@ -165,8 +171,9 @@
                 <h3>Deterministic safety</h3>
                 <p>Answers are produced only when evidence is sufficient. Otherwise, the system refuses.</p>
                 <ul>
-                    <li>6 Layer control</li>
+                    <li>6 Layer Hallucination control</li>
                     <li>Audit-ready decision paths</li>
+                    <li>Configurable gonvernance</li>
                 </ul>
             </article>
             <article class="capability-card">
@@ -174,13 +181,13 @@
                 <p>We do not build generic AI solution. We build a focused solution for a specific business problem.</p>
                 <ul>
                     <li>Razor-focused outcomes</li>
-                    <li>Configured to one workflow</li>
-                    <li>Trusted by design</li>
+                    <li>configurable to one workflow</li>
+                    <li>Extensible by design</li>
                 </ul>
             </article>
             <article class="capability-card">
                 <h3>Isolated deployment</h3>
-                <p>Single-tenant infrastructure with no shared models, no outbound training, and strict boundaries.</p>
+                <p>Infrastructure with isolation built in, no outbound training, and strict boundaries.</p>
                 <ul>
                     <li>Isolated VPC and air-gapped options</li>
                     <li>No shared models across tenants</li>
@@ -199,7 +206,7 @@
         </div>
         <div class="callout">
             <strong>We do not build generic solution.</strong>
-            <span>We build a focused solution for a specific business problem.</span>
+            <span>We help build focused solution for a specific business problem.</span>
         </div>
         <div class="use-case-grid">
             <article class="use-case-card">
@@ -218,17 +225,17 @@
     </section>
 
     <!-- Architecture Section -->
-    <section id="architecture" class="section alt">
+    <section id="architecture" class="section alt section-architecture">
         <div class="section-heading">
-            <span class="eyebrow">How it works</span>
-            <h2>Governed from ingestion to answer</h2>
-            <p>We keep the system simple for your teams while enforcing hard boundaries behind the scenes.</p>
+            <!-- <span class="eyebrow">How it works</span> -->
+            <h2>How it works</h2>
+            <p>We keep the system simple for your teams while doing heavy lifting behind the scenes.</p>
         </div>
         <div class="step-grid">
             <div class="step-card">
                 <span>01</span>
                 <h4>Connect and classify</h4>
-                <p>ou connect, We Ingest data securely, tag PII, and map sources to permissions and owners.</p>
+                <p>You connect, We Ingest data securely, tag PII, and map sources to permissions and owners.</p>
             </div>
             <div class="step-card">
                 <span>02</span>
@@ -249,7 +256,7 @@
     </section>
 
     <!-- Use Cases Section -->
-    <section id="use-cases" class="section">
+    <section id="use-cases" class="section section-usecases">
         <div class="section-heading">
             <span class="eyebrow">Use cases</span>
             <h2>Built for high-stakes enterprise workflows</h2>
@@ -272,7 +279,7 @@
     </section>
 
     <!-- Deterministic Section -->
-    <section id="deterministic" class="section alt">
+    <!-- <section id="deterministic" class="section alt section-deterministic">
         <div class="section-heading split">
             <div>
                 <span class="eyebrow">Deterministic by design</span>
@@ -300,7 +307,7 @@
                 <p>Every decision is traceable for security, compliance, and leadership.</p>
             </div>
         </div>
-    </section>
+    </section> -->
 
     <!-- Signup Section -->
     <section id="signup" class="section">
@@ -308,9 +315,8 @@
             <div>
                 <span class="eyebrow">Request access</span>
                 <h2>Start your private AI deployment</h2>
-                <p>Share your company details and we will design an isolated, deterministic AI environment tailored to
-                    your data and governance requirements.</p>
-                <div class="signup-notes">
+                <p>Share your company details and the usecase, we shall inform you during the private beta which is planned to launch in March End.</p>
+                <!-- <div class="signup-notes">
                     <div>
                         <strong>Private onboarding</strong>
                         <span>Dedicated security review and approval</span>
@@ -319,7 +325,7 @@
                         <strong>Enterprise readiness</strong>
                         <span>Deployment aligned to compliance needs</span>
                     </div>
-                </div>
+                </div> -->
             </div>
             <form class="signup-form" aria-label="TensrGrid signup form">
                 <label>
@@ -354,33 +360,33 @@
     <!-- FAQ Section -->
     <section id="faq" class="section alt">
         <div class="section-heading">
-            <span class="eyebrow">FAQ</span>
-            <h2>Questions CTOs and CEOs ask us</h2>
+            <!-- <span class="eyebrow">FAQ</span> -->
+            <h2>FAQ</h2>
         </div>
         <div class="faq-grid">
             <details class="faq-item" open>
                 <summary>Is our data ever used to train shared models?</summary>
                 <p>No. We deploy isolated environments with no shared models and no outbound training.</p>
             </details>
+            <details class="faq-item" open>
+                <summary>What model do you use?</summary>
+                <p>Currently we provide option between flavours of Gemma3 and LLAMA.</p>
+            </details>
             <details class="faq-item">
                 <summary>Can you deploy inside our VPC or in an air-gapped setup?</summary>
-                <p>Yes. We offer isolated VPC and air-gapped deployment options with strict network boundaries.</p>
+                <p>Currently we offer only managed service, but we are planning for hosted model soon.</p>
             </details>
             <details class="faq-item">
                 <summary>How do you prevent hallucinations?</summary>
-                <p>We combine confidence gates, citation-first responses, and refusal paths to block unsupported answers.</p>
+                <p>We combine confidence gates, citation-first responses, refusal paths and 6 layer Hallucination control to block unsupported answers.</p>
             </details>
             <details class="faq-item">
                 <summary>What data sources can you connect to?</summary>
-                <p>Databases, files, SaaS tools, and internal APIs. We map permissions, owners, and lineage by default.</p>
+                <p>Databases, files, Time series data, Graph based data, and APIs.</p>
             </details>
             <details class="faq-item">
                 <summary>How fast can we start a pilot?</summary>
-                <p>Typically within weeks, once security review and data access are approved.</p>
-            </details>
-            <details class="faq-item">
-                <summary>What makes TensrGrid hard to copy?</summary>
-                <p>Our moat is disciplined memory governance, deterministic refusals, and operational trust built over time.</p>
+                <p>We are opening private beta soon, You will get an announcement for that.</p>
             </details>
         </div>
     </section>
@@ -392,7 +398,7 @@
                 <p>Private AI infrastructure for enterprises that need deterministic governance and isolated
                     intelligence.</p>
             </div>
-            <div>
+            <!-- <div>
                 <span class="eyebrow">Platform</span>
                 <ul>
                     <li>Data sync</li>
@@ -407,13 +413,13 @@
                     <li>Privacy</li>
                     <li>Contact</li>
                 </ul>
-            </div>
+            </div> -->
         </div>
         <div class="footer-meta">
             <span>&copy; 2026 TensrGrid Systems Inc. All rights reserved.</span>
             <div class="footer-links">
-                <span>Privacy Policy</span>
-                <span>Terms of Service</span>
+                <!-- <span>Privacy Policy</span> -->
+                <!-- <span>Terms of Service</span> -->
             </div>
         </div>
     </footer>

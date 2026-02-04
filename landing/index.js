@@ -35,6 +35,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Mobile nav toggle
+    const navShell = document.querySelector('.nav-shell');
+    const navToggle = document.querySelector('.nav-toggle');
+    const navLinks = document.querySelector('.nav-links');
+
+    if (navShell && navToggle && navLinks) {
+        navToggle.addEventListener('click', () => {
+            const isOpen = navShell.classList.toggle('nav-open');
+            navToggle.setAttribute('aria-expanded', String(isOpen));
+        });
+
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navShell.classList.remove('nav-open');
+                navToggle.setAttribute('aria-expanded', 'false');
+            });
+        });
+    }
+
     // Parallax effect for hero image
     const heroImage = document.querySelector('.hero-image img');
     window.addEventListener('scroll', () => {
