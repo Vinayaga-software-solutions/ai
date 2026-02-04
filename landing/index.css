@@ -283,6 +283,21 @@ ul {
     gap: 0.6rem;
 }
 
+.pill-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.pill {
+    padding: 0.6rem 1.2rem;
+    border-radius: 999px;
+    border: 1px solid var(--border-color);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
 .deterministic-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -342,6 +357,34 @@ ul {
     font-size: 0.7rem;
     color: var(--text-muted);
     letter-spacing: 0.2em;
+}
+
+.flow-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.5rem;
+}
+
+.flow-card {
+    background: var(--panel);
+    border: 1px solid var(--border-color);
+    border-radius: 18px;
+    padding: 1.8rem;
+}
+
+.flow-card span {
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+}
+
+.flow-card h4 {
+    margin: 0.8rem 0;
+}
+
+.flow-card p {
+    color: var(--text-secondary);
 }
 
 .signup-shell {
@@ -459,6 +502,12 @@ footer {
 .footer-links {
     display: flex;
     gap: 1.5rem;
+}
+
+@media (max-width: 1200px) {
+    .flow-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
 @media (max-width: 1024px) {
