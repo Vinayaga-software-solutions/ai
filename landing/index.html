@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TensrGrid | Deterministic Private AI Infrastructure</title>
+    <title>TensrGrid | Reliable Private AI Infrastructure</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='6' y='6' width='16' height='16' rx='3' stroke='%233b6cff' stroke-width='2' fill='none'/%3E%3Crect x='42' y='6' width='16' height='16' rx='3' stroke='%233b6cff' stroke-width='2' fill='none'/%3E%3Crect x='6' y='42' width='16' height='16' rx='3' stroke='%233b6cff' stroke-width='2' fill='none'/%3E%3Crect x='42' y='42' width='16' height='16' rx='3' stroke='%233b6cff' stroke-width='2' fill='none'/%3E%3Ccircle cx='32' cy='32' r='6' fill='%233b6cff'/%3E%3Cline x1='14' y1='14' x2='32' y2='32' stroke='%233b6cff' stroke-width='2'/%3E%3Cline x1='50' y1='14' x2='32' y2='32' stroke='%233b6cff' stroke-width='2'/%3E%3Cline x1='14' y1='50' x2='32' y2='32' stroke='%233b6cff' stroke-width='2'/%3E%3Cline x1='50' y1='50' x2='32' y2='32' stroke='%233b6cff' stroke-width='2'/%3E%3C/svg%3E">
     <meta name="description"
-        content="TensrGrid is deterministic, private AI infrastructure for enterprises. Bring your data and get governed intelligence in an isolated environment.">
+        content="TensrGrid is deterministic, private AI infrastructure. Bring your data and get governed intelligence in an isolated environment.">
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,7 +18,24 @@
 <body>
     <!-- Navigation -->
     <nav class="nav-shell">
-        <div class="logo">Tensr<span>Grid</span></div>
+        <div class="logo">
+  <svg width="28" height="28" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="6" y="6" width="16" height="16" rx="3" stroke="#3b6cff" stroke-width="2"/>
+    <rect x="42" y="6" width="16" height="16" rx="3" stroke="#3b6cff" stroke-width="2"/>
+    <rect x="6" y="42" width="16" height="16" rx="3" stroke="#3b6cff" stroke-width="2"/>
+    <rect x="42" y="42" width="16" height="16" rx="3" stroke="#3b6cff" stroke-width="2"/>
+
+    <circle cx="32" cy="32" r="6" fill="#3b6cff"/>
+
+    <line x1="14" y1="14" x2="32" y2="32" stroke="#3b6cff" stroke-width="2"/>
+    <line x1="50" y1="14" x2="32" y2="32" stroke="#3b6cff" stroke-width="2"/>
+    <line x1="14" y1="50" x2="32" y2="32" stroke="#3b6cff" stroke-width="2"/>
+    <line x1="50" y1="50" x2="32" y2="32" stroke="#3b6cff" stroke-width="2"/>
+  </svg>
+
+  <span class="logo-text">Tensr<span>Grid</span></span>
+</div>
+
         <button class="nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false"
             aria-controls="nav-links">
             <span></span>
@@ -25,10 +43,9 @@
             <span></span>
         </button>
         <div class="nav-links" id="nav-links">
-            <a href="#issues">Challenges</a>
             <a href="#capabilities">Capabilities</a>
             <a href="#audience">Users</a>
-            <a href="#architecture">Architecture</a>
+            <a href="#architecture">Flow</a>
             <a href="#use-cases">Use Cases</a>
             <!-- <a href="#deterministic">Deterministic</a> -->
             <a href="#faq">FAQ</a>
@@ -41,12 +58,12 @@
         <div class="hero-grid">
             <div class="hero-copy">
                 <span class="badge">Private AI Infrastructure</span>
-                <h1>Deterministic private AI, built around your data.</h1>
-                <p>
-                    TensrGrid is the enterprise private AI stack that keeps your data isolated, builds your data intelligence,
+                <h1>Reliable private AI, built around your data.</h1>
+                <p><span class="hero-highlight">You bring data.
+                        We bring intelligence.</span> <br /> <br />
+                    TensrGrid is the private AI stack that keeps your data isolated, builds your data intelligence,
                     configure intelligence, and enforces governance by default. We model your data context, preserve
-                    relationships, and deliver accuracy you can rely on. <br /><span class="hero-highlight">You bring data.
-                        We bring intelligence.</span>
+                    relationships, and deliver accuracy you can rely on.
                 </p>
                 <div class="hero-actions">
                     <a class="btn primary" href="#signup">Join Private Beta</a>
@@ -58,13 +75,14 @@
                         <span>Isolation-first environments</span>
                     </div>
                     <div>
+                        <strong>Multi-format data</strong>
+                        <span>Structured, unstructured, and graph sources</span>
+                    </div>
+                    <div>
                         <strong>Deterministic answers</strong>
                         <span>Governed, auditable outputs</span>
                     </div>
-                    <div>
-                        <strong>Context-aware modeling</strong>
-                        <span>Preserves relationships and context</span>
-                    </div>
+
                 </div>
             </div>
             <div class="hero-panel">
@@ -81,7 +99,7 @@
                         </div>
                         <div class="panel-item">
                             <span class="panel-label">Deterministic</span>
-                            <span class="panel-value">Context aware intelligence,  refusals</span>
+                            <span class="panel-value">Context aware intelligence, validation and refusal paths</span>
                         </div>
                         <div class="panel-item">
                             <span class="panel-label">Deployment</span>
@@ -100,8 +118,8 @@
                         <p>Every answer is logged, traceable, and either approved or refused.</p>
                     </div>
                     <div class="panel-mini">
-                        <h4>Operate</h4>
-                        <p>Use as managed platform or Hosted based on your use cases.</p>
+                        <h4>Context-aware</h4>
+                        <p>Result are context aware and verifiable</p>
                     </div>
                 </div>
             </div>
@@ -119,14 +137,13 @@
             <article class="issue-card">
                 <span>Issue 01</span>
                 <h3>Privacy risks</h3>
-                <p>Sensitive enterprise data cannot be safely shared with public LLM providers without sacrificing
+                <p>Sensitive data cannot be safely shared with public LLM providers without sacrificing
                     compliance.</p>
             </article>
             <article class="issue-card">
                 <span>Issue 02</span>
                 <h3>Infrastructure</h3>
-                <p>GPUs, model optimization, and inference scaling require deep expertise that individual teams
-                    lack.</p>
+                <p>GPUs, model optimization, and inference scaling require deep expertise.</p>
             </article>
             <article class="issue-card">
                 <span>Issue 03</span>
@@ -142,7 +159,7 @@
             <span class="eyebrow">Platform capabilities</span>
             <h2>Private AI your developers and business teams can actually use</h2>
             <p>
-                TensrGrid delivers a full-stack private AI platform designed for enterprise accountability. We focus on
+                TensrGrid delivers a full-stack private AI platform designed for accountability. We focus on
                 safe data handling, context-aware memory, and deterministic behavior. We convert any data source into
                 intelligent, governed knowledge your teams can use with confidence - without writing brittle agentic
                 code.
@@ -181,7 +198,7 @@
                 <p>We do not build generic AI solution. We build a focused solution for a specific business problem.</p>
                 <ul>
                     <li>Razor-focused outcomes</li>
-                    <li>configurable to one workflow</li>
+                    <li>configurable workflows</li>
                     <li>Extensible by design</li>
                 </ul>
             </article>
@@ -259,21 +276,21 @@
     <section id="use-cases" class="section section-usecases">
         <div class="section-heading">
             <span class="eyebrow">Use cases</span>
-            <h2>Built for high-stakes enterprise workflows</h2>
+            <h2>Built for high-stakes workflows</h2>
             <p>We focus on one problem at a time, delivering sharp outcomes instead of generic AI.</p>
         </div>
         <div class="use-case-grid">
             <article class="use-case-card">
                 <h3>Legal research and case analysis</h3>
-                <p>Deliver precedent-backed answers with citations and refusal paths when evidence is missing.</p>
+                <p>Automatically analyze historical judgments and applicable laws to generate tailored legal arguments and strategic points for each case.</p>
             </article>
             <article class="use-case-card">
                 <h3>HR policy compliance</h3>
-                <p>Automate policy checks with deterministic rules, versioned policies, and auditable outcomes.</p>
+                <p>Automate policy checks for the data with deterministic rules, versioned policies, and auditable outcomes.for example, automatically validating expenses against company rules after submission but before processing.</p>
             </article>
             <article class="use-case-card">
                 <h3>AI-enriched tables and workflows</h3>
-                <p>Add intelligent fields to any table - summaries, risk flags, or next-best actions - with governance.</p>
+                <p>Add intelligent fields to any table - summaries, risk flags, or next-best actions.</p>
             </article>
         </div>
     </section>
@@ -359,43 +376,48 @@
 
     <!-- FAQ Section -->
     <section id="faq" class="section alt">
-        <div class="section-heading">
-            <!-- <span class="eyebrow">FAQ</span> -->
-            <h2>FAQ</h2>
-        </div>
-        <div class="faq-grid">
-            <details class="faq-item" open>
-                <summary>Is our data ever used to train shared models?</summary>
-                <p>No. We deploy isolated environments with no shared models and no outbound training.</p>
-            </details>
-            <details class="faq-item" open>
-                <summary>What model do you use?</summary>
-                <p>Currently we provide option between flavours of Gemma3 and LLAMA.</p>
-            </details>
-            <details class="faq-item">
-                <summary>Can you deploy inside our VPC or in an air-gapped setup?</summary>
-                <p>Currently we offer only managed service, but we are planning for hosted model soon.</p>
-            </details>
-            <details class="faq-item">
-                <summary>How do you prevent hallucinations?</summary>
-                <p>We combine confidence gates, citation-first responses, refusal paths and 6 layer Hallucination control to block unsupported answers.</p>
-            </details>
-            <details class="faq-item">
-                <summary>What data sources can you connect to?</summary>
-                <p>Databases, files, Time series data, Graph based data, and APIs.</p>
-            </details>
-            <details class="faq-item">
-                <summary>How fast can we start a pilot?</summary>
-                <p>We are opening private beta soon, You will get an announcement for that.</p>
-            </details>
-        </div>
+            <details class="faq-section">
+                <summary class="faq-summary">
+                    <div class="section-heading">
+                        <!-- <span class="eyebrow">FAQ</span> -->
+                        <h2 class="faq-toggle-text">FAQ</h2>
+                    </div>
+                    <!-- <span >FAQ details</span> -->
+                </summary>
+            <div class="faq-grid">
+                <details class="faq-item">
+                    <summary>Is our data ever used to train shared models?</summary>
+                    <p>No. We deploy isolated environments with no shared models and no outbound training.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>What model do you use?</summary>
+                    <p>Currently we provide option between flavours of Gemma3 and LLAMA.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>Can you deploy inside our VPC or in an air-gapped setup?</summary>
+                    <p>Currently we offer only managed service, but we are planning for hosted model soon.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>How do you prevent hallucinations?</summary>
+                    <p>We combine confidence gates, citation-first responses, refusal paths and 6 layer Hallucination control to block unsupported answers.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>What data sources can you connect to?</summary>
+                    <p>Databases, files, Time series data, Graph based data, and APIs.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>How fast can we start a pilot?</summary>
+                    <p>We are opening private beta soon, You will get an announcement for that.</p>
+                </details>
+            </div>
+        </details>
     </section>
 
     <footer>
         <div class="footer-grid">
             <div>
-                <div class="logo">Tensr<span>Grid</span></div>
-                <p>Private AI infrastructure for enterprises that need deterministic governance and isolated
+                <div class="logo"><span class="logo-text">Tensr<span>Grid</span></span></div>
+                <p>Private AI infrastructure for system and products that need Reliable governance and isolated
                     intelligence.</p>
             </div>
             <!-- <div>
@@ -405,15 +427,15 @@
                     <li>Memory governance</li>
                     <li>Deterministic safety</li>
                 </ul>
-            </div>
-            <div>
-                <span class="eyebrow">Company</span>
-                <ul>
-                    <li>Security</li>
-                    <li>Privacy</li>
-                    <li>Contact</li>
-                </ul>
             </div> -->
+            <div>
+                <span class="eyebrow">Contact us</span>
+                <ul>
+                    <!-- <li>Security</li> -->
+                    <!-- <li>Privacy</li> -->
+                      <li><a href="mailto:hello@tensrgrid.com">hello@tensrgrid.com</a></li>
+                </ul>
+            </div>
         </div>
         <div class="footer-meta">
             <span>&copy; 2026 TensrGrid Systems Inc. All rights reserved.</span>
@@ -425,5 +447,14 @@
     </footer>
 
     <script src="index.js"></script>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GBJP6ESJGK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-GBJP6ESJGK');
+</script>
 </body>
 </html>
