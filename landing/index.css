@@ -55,11 +55,25 @@ ul {
 }
 
 .logo {
+    display: inline-flex;
+    align-items: center;
     font-weight: 800;
     font-size: 1.5rem;
 }
 
-.logo span {
+.logo svg {
+    display: block;
+    flex: 0 0 auto;
+    margin-right: 0.6rem;
+}
+
+.logo-text {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+}
+
+.logo-text span {
     color: var(--accent);
 }
 
@@ -658,6 +672,43 @@ ul {
 .faq-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
 }
+
+.faq-section {
+    border: none;
+}
+
+.faq-summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.faq-summary:hover .faq-toggle-text {
+    color: var(--accent);
+}
+
+.faq-summary::-webkit-details-marker {
+    display: none;
+}
+
+.faq-toggle-text {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.faq-section[open] .faq-toggle-text {
+    content: "";
+    color: var(--text-muted);
+}
+
 
 .faq-item {
     background: transparent;
