@@ -18,6 +18,9 @@
                     <flux:sidebar.item icon="folder" href="/project" wire:navigate>
                         {{ __('Projects') }}
                     </flux:sidebar.item>
+                    <flux:sidebar.item icon="folder" href="/datacollection" wire:navigate>
+                        {{ __('Data Collections') }}
+                    </flux:sidebar.item>
                 </flux:sidebar.group>
             </flux:sidebar.nav>
 

@@ -2,6 +2,7 @@
 
 use Livewire\Component;
 use App\Models\Project;
+use Illuminate\Validation\Rule;
 
 new class extends Component
 {
@@ -21,7 +22,13 @@ new class extends Component
     {
         $this->authorize('edit', $this->project);
         $validated = $this->validate([
-            'name' => 'required|max:255',
+            'name' => [
+                'required',
+                'max:255',
+                Rule::unique('projects', 'name')->where(fn ($query) => 
+                    $query->where('created_by', auth()->id())->where('id', '!=', $this->project->id)
+                ),
+            ],
             'description' => 'max:1000',
         ]);
 

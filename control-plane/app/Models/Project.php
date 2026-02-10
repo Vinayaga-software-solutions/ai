@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+#[ScopedBy(OwnerScope::class)]
 class Project extends Model
 {
     protected $fillable = ['name', 'description', 'created_by', 'updated_by'];
@@ -18,5 +19,10 @@ class Project extends Model
                 $builder->where('created_by', auth()->id());
             }
         });
+    }
+
+    public function dataCollections()
+    {
+        return $this->hasMany(DataCollection::class);
     }
 }

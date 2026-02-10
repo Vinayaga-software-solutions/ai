@@ -2,6 +2,7 @@
 
 use Livewire\Component;
 use App\Models\Project;
+use Illuminate\Validation\Rule;
 
 new class extends Component
 {
@@ -11,17 +12,26 @@ new class extends Component
  
     public function save()
     {
-        $project = $this->validate([
-            'name' => 'required|max:255',
+        $this->authorize('create', Project::class);
+        $validated = $this->validate([
+            'name' => [
+            'required',
+            'max:255',
+            // The unique rule must be inside the 'name' array
+            Rule::unique('projects', 'name')->where(fn ($query) => 
+                $query->where('created_by', auth()->id())
+            ),
+            ],
             'description' => 'max:1000',
         ]);
  
-        Project::create([
-            'name' => $project['name'],
-            'description' => $project['description'] ?? '',
+        $project =Project::create([
+            'name' => $validated['name'],
+            'description' => $validated['description'] ?? '',
             'created_by' => auth()->id(),
             'updated_by' => auth()->id(),
         ]);
+        return $this->redirect("/project/{$project->id}/detail", navigate: true);
     }
 };
 ?>

@@ -22,6 +22,7 @@ new class extends Component
     @if (session()->has('message'))
         <div style="color: green; margin-bottom: 10px;">{{ session('message') }}</div>
     @endif
+    
 <div class="space-y-6">
     {{-- Header Section --}}
     <div class="flex items-center justify-between">
@@ -41,9 +42,9 @@ new class extends Component
         <flux:table.columns>
             <flux:table.column>Name</flux:table.column>
             <flux:table.column>Description</flux:table.column>
-            <flux:table.column>Created By</flux:table.column>
-            <flux:table.column>Updated By</flux:table.column>
-            <flux:table.column align="end">Actions</flux:table.column>
+            {{-- <flux:table.column>Created By</flux:table.column> --}}
+            {{-- <flux:table.column>Updated By</flux:table.column> --}}
+            {{-- <flux:table.column align="end">Actions</flux:table.column> --}}
         </flux:table.columns>
 
         <flux:table.rows>
@@ -59,14 +60,14 @@ new class extends Component
                     <flux:table.cell class="text-zinc-500">
                         {{ Str::limit($project->description, 60) }}
                     </flux:table.cell>
-
+{{-- 
                     <flux:table.cell>
                         <flux:badge size="sm" inset="top bottom">{{ $project->creator->name ?? 'System' }}</flux:badge>
                     </flux:table.cell>
 
                     <flux:table.cell>
                         <flux:text size="sm">{{ $project->updater->name ?? 'System' }}</flux:text>
-                    </flux:table.cell>
+                    </flux:table.cell> --}}
 
                     {{-- <flux:table.cell align="end">
                         <div class="flex justify-end gap-2">
