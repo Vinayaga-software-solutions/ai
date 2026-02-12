@@ -99,7 +99,7 @@ new class extends Component
             />
 
             <div class="flex justify-end gap-3">
-                <flux:button href="/datacollection" variant="ghost" wire:navigate>Cancel</flux:button>
+                <flux:button href="/data" variant="ghost" wire:navigate>Cancel</flux:button>
                 <flux:button type="submit" variant="primary">Save</flux:button>
             </div>
         </form>

@@ -19,5 +19,10 @@ Route::view('dashboard', 'dashboard')
     Route::livewire('/datacollection/create', 'pages::data-collection.create');
     Route::livewire('/datacollection/{dataCollection}/edit', 'pages::data-collection.edit');
     Route::livewire('/datacollection/{dataCollection}/detail', 'pages::data-collection.view');
+
+    Route::livewire('/data', 'pages::data.list');
+    Route::livewire('/data/create', 'pages::data.create');
+    Route::livewire('/data/{data}/edit', 'pages::data.edit');
+    Route::livewire('/data/{data}/detail', 'pages::data.view');
     
 require __DIR__.'/settings.php';
