@@ -1,6 +1,6 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "TensrGrid",
+    "name": "tensrgrid/control-plane",
     "type": "project",
     "description": "TensrGrid Control Plane",
     "keywords": [
@@ -13,6 +13,7 @@
         "laravel/fortify": "^1.30",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
+        "league/flysystem-google-cloud-storage": "^3.31",
         "livewire/flux": "^2.9.0",
         "livewire/livewire": "^4.0"
     },

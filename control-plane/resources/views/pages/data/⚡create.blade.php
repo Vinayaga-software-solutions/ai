@@ -52,7 +52,8 @@ new class extends Component {
         // Handle File Upload for Documents
         if ($this->type === 'document' && $this->file) {
             // Determine disk based on environment (local vs gcs)
-            $disk = config('app.env') === 'production' ? 'gcs' : 'local';
+            $disk = config('filesystems.default');
+            // Storage::disk('gcs')->put('test.txt', 'Hello from Laravel!');
 
             // Generate a clean path: tensrgrid/documents/{collection_id}/{filename}
             $directory = "tensrgrid/documents/{$this->data_collection_id}";
@@ -70,7 +71,7 @@ new class extends Component {
 
         Flux::toast('Data source initialized successfully.');
 
-        return $this->redirect('/data-collections', navigate: true);
+        return $this->redirect('/data', navigate: true);
     }
 };
 ?>
