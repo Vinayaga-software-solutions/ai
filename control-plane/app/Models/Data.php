@@ -4,7 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 #[ScopedBy(OwnerScope::class)]
 class Data extends Model
 {
@@ -19,6 +20,11 @@ class Data extends Model
         'storage_config',
         'created_by',
     ];
+
+    public function files(): HasMany
+    {
+        return $this->hasMany(DataFile::class);
+    }
 
     /**
      * Relationship to the Data Collection
@@ -57,5 +63,19 @@ class Data extends Model
             'json'     => 'mongodb',  // or 'firestore'
             default    => 'local',
         };
+    }
+
+    protected static function booted()
+    {
+        static::deleting(function ($data) {
+            // Delete all associated files
+            // We iterate so that the DataFile's deleting hook is also triggered
+            $data->files()->get()->each->delete();
+            
+            // If the storage_path is a directory (for documents), you might want to clean it
+            if ($data->type === 'document') {
+                Storage::disk(config('filesystems.default'))->deleteDirectory($data->storage_path);
+            }
+        });
     }
 }

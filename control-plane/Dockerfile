@@ -1,20 +1,31 @@
-FROM php:8.3-cli
+FROM php:8.2-apache
 
-WORKDIR /app
-
-# System deps
+# Install SQLite and other essentials
 RUN apt-get update && apt-get install -y \
-    git unzip libsqlite3-dev curl \
-    && docker-php-ext-install pdo pdo_sqlite
+    libsqlite3-dev \
+    zip unzip git curl \
+    && docker-php-ext-install pdo_mysql pdo_sqlite mbstring bcmath
 
-# Copy project
+# Configure Apache for Cloud Run ($PORT)
+ENV PORT=8080
+RUN sed -i 's/80/${PORT}/g' /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf
+RUN a2enmod rewrite
+
+# Create the folder where the GCS bucket will be mounted
+# We'll put it in 'storage/database'
+RUN mkdir -p /var/www/html/storage/database && \
+    chown -R www-data:www-data /var/www/html/storage
+
+WORKDIR /var/www/html
 COPY . .
 
-# Install composer properly
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN composer install --no-dev --optimize-autoloader
 
+# Final permission check
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+
 EXPOSE 8080
+CMD ["apache2-foreground"]
 
 CMD php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8080
