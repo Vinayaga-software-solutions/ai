@@ -1,4 +1,15 @@
 services:
+  # 0. Laravel Control Plane
+  control-plane:
+    build:
+      context: ../control-plane
+      dockerfile: Dockerfile
+    env_file:
+      - ../control-plane/.env
+    ports:
+      - "8080:8080"
+    restart: always
+
   # 1. Orchestrator Service (The FastAPI App)
   orchestrator:
     build: .

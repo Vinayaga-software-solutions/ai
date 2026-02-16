@@ -24,8 +24,8 @@
 OUR PLATFORM
 │
 ├─ Data Ingestion
-│  ├─ RudderStack (SDK / API / Events)
-│  └─ Airbyte (DBs / Black-box systems)
+│  ├─ RudderStack/jitsu (SDK / API / Events)
+│  └─ Airbyte (DBs / Sync based system)
 │
 ├─ Raw Data Layer
 │  └─ Secure, immutable raw DB
