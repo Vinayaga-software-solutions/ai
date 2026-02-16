@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'gcp_pubsub' => [
+        'project_id' => env('GOOGLE_CLOUD_PROJECT_ID'),
+        'key_file_path' => env('GOOGLE_CLOUD_KEY_FILE'),
+        'topic' => env('GOOGLE_CLOUD_PUBSUB_TOPIC'),
+    ],
+
 ];

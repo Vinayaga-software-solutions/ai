@@ -1,6 +1,7 @@
 <?php
 namespace App\Models;
 
+use App\Services\DataFilePubSubPublisher;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
@@ -35,6 +36,10 @@ class DataFile extends Model
 
     protected static function booted()
     {
+        static::created(function ($dataFile) {
+            app(DataFilePubSubPublisher::class)->publishFileUploaded($dataFile);
+        });
+
         static::deleting(function ($dataFile) {
             // Remove the actual file from storage
             if (Storage::disk(config('filesystems.default'))->exists($dataFile->storage_path)) {

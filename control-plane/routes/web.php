@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\DataFileUploadController;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -9,6 +11,11 @@ Route::get('/', function () {
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
+
+Route::middleware(['auth.basic'])->prefix('api')->group(function () {
+    Route::post('/data/{data}/files', [DataFileUploadController::class, 'store'])
+        ->withoutMiddleware([ValidateCsrfToken::class]);
+});
 
     Route::livewire('/project/create', 'pages::project.create');
     Route::livewire('/project', 'pages::project.list');

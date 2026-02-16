@@ -1,8 +1,9 @@
-FROM php:8.2-apache
+FROM php:8.4-apache
 
 # Install SQLite and other essentials
 RUN apt-get update && apt-get install -y \
     libsqlite3-dev \
+    libonig-dev \
     zip unzip git curl \
     && docker-php-ext-install pdo_mysql pdo_sqlite mbstring bcmath
 
@@ -26,6 +27,4 @@ RUN composer install --no-dev --optimize-autoloader
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 EXPOSE 8080
-CMD ["apache2-foreground"]
-
-CMD php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8080
+CMD ["sh", "-c", "php artisan migrate --force && apache2-foreground"]
