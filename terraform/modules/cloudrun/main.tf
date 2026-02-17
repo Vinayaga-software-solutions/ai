@@ -7,7 +7,7 @@ resource "google_project_service" "secretmanager" {
 
 # Create a secret for the .env file
 resource "google_secret_manager_secret" "app_env" {
-  secret_id = "${var.service_name}-env-v2" # Using a new ID to ensure clean creation
+  secret_id = "${var.service_name}-env-v2"
   
   replication {
     automatic = true
@@ -16,10 +16,16 @@ resource "google_secret_manager_secret" "app_env" {
   depends_on = [google_project_service.secretmanager]
 }
 
-# Add the .env content to the secret
+# Add the .env content to the secret (Terraform will create it once, then ignore changes)
 resource "google_secret_manager_secret_version" "app_env_version" {
   secret      = google_secret_manager_secret.app_env.id
   secret_data = file(var.env_file_path)
+
+  lifecycle {
+    ignore_changes = [
+      secret_data,
+    ]
+  }
 }
 
 # Create a service account for Cloud Run
@@ -72,6 +78,76 @@ resource "google_cloud_run_v2_service" "laravel" {
       env {
         name  = "APP_KEY"
         value = var.app_key
+      }
+
+      env {
+        name  = "DB_CONNECTION"
+        value = "mysql"
+      }
+
+      env {
+        name  = "DB_DATABASE"
+        value = "tensrgrid"
+      }
+
+      env {
+        name  = "DB_USERNAME"
+        value = "tensr_user"
+      }
+
+      env {
+        name  = "DB_PASSWORD"
+        value = "72zwbn&@ZWBN"
+      }
+
+      env {
+        name  = "FILESYSTEM_DISK"
+        value = "gcs"
+      }
+
+      env {
+        name  = "GOOGLE_CLOUD_PROJECT_ID"
+        value = var.project_id
+      }
+
+      env {
+        name  = "GOOGLE_CLOUD_STORAGE_BUCKET"
+        value = var.bucket_name
+      }
+
+      env {
+        name  = "GOOGLE_CLOUD_PUBSUB_TOPIC"
+        value = var.topic_name
+      }
+
+      env {
+        name  = "GOOGLE_CLOUD_KEY_FILE"
+        value = ""
+      }
+
+      env {
+        name  = "SESSION_DRIVER"
+        value = "database"
+      }
+
+      env {
+        name  = "CACHE_STORE"
+        value = "database"
+      }
+
+      env {
+        name  = "QUEUE_CONNECTION"
+        value = "database"
+      }
+
+      env {
+        name  = "SESSION_SECURE_COOKIE"
+        value = "true"
+      }
+
+      env {
+        name  = "APP_URL"
+        value = "https://tensrgrid-control-plane-911593594446.us-central1.run.app"
       }
 
       volume_mounts {

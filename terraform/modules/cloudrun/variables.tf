@@ -33,3 +33,13 @@ variable "app_key" {
   type        = string
   description = "Laravel APP_KEY"
 }
+
+variable "bucket_name" {
+  type        = string
+  description = "GCS Bucket name"
+}
+
+variable "topic_name" {
+  type        = string
+  description = "Pub/Sub Topic name"
+}

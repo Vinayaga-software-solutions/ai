@@ -47,6 +47,32 @@ resource "google_project_iam_member" "cloud_build_artifact_admin" {
   member  = "serviceAccount:911593594446-compute@developer.gserviceaccount.com"
 }
 
+resource "google_project_service" "storage_api" {
+  service                    = "storage.googleapis.com"
+  disable_dependent_services = false
+  disable_on_destroy         = false
+}
+
+# Grant Storage permissions to the Cloud Run service account
+resource "google_storage_bucket_iam_member" "cloud_run_storage_admin" {
+  bucket = module.raw_storage.bucket_name
+  role   = "roles/storage.objectAdmin"
+  member = "serviceAccount:${module.laravel_app.service_account_email}"
+}
+
+resource "google_project_service" "pubsub_api" {
+  service                    = "pubsub.googleapis.com"
+  disable_dependent_services = false
+  disable_on_destroy         = false
+}
+
+# Grant Pub/Sub permissions to the Cloud Run service account
+resource "google_pubsub_topic_iam_member" "cloud_run_pubsub_publisher" {
+  topic  = module.pubsub_messaging.topic_id
+  role   = "roles/pubsub.publisher"
+  member = "serviceAccount:${module.laravel_app.service_account_email}"
+}
+
 module "raw_storage" {
   source      = "./modules/storage"
   bucket_name = "tensrgrid-raw-data"
@@ -72,6 +98,8 @@ module "laravel_app" {
   env_file_path = "${path.module}/../control-plane/.env"
   db_host       = module.mysql_db.instance_public_ip
   app_key       = var.app_key
+  bucket_name   = module.raw_storage.bucket_name
+  topic_name    = "tensrgrid-data-file-uploaded" # Or module.pubsub_messaging.topic_id but the app expects just the name
 }
 
 variable "project_id" {

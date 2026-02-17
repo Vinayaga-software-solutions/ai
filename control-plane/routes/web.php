@@ -17,6 +17,7 @@ Route::middleware(['auth.basic'])->prefix('api')->group(function () {
         ->withoutMiddleware([ValidateCsrfToken::class]);
 });
 
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::livewire('/project/create', 'pages::project.create');
     Route::livewire('/project', 'pages::project.list');
     Route::livewire('/project/{project}/detail', 'pages::project.view');
@@ -31,5 +32,6 @@ Route::middleware(['auth.basic'])->prefix('api')->group(function () {
     Route::livewire('/data/create', 'pages::data.create');
     Route::livewire('/data/{data}/edit', 'pages::data.edit');
     Route::livewire('/data/{data}/detail', 'pages::data.view');
-    
-require __DIR__.'/settings.php';
+});
+
+require __DIR__ . '/settings.php';

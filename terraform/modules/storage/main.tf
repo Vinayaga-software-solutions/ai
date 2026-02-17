@@ -14,3 +14,7 @@ resource "google_storage_bucket" "raw_data" {
 output "bucket_url" {
   value = google_storage_bucket.raw_data.url
 }
+
+output "bucket_name" {
+  value = google_storage_bucket.raw_data.name
+}
