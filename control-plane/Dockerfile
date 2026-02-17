@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
 # Configure Apache for Cloud Run ($PORT)
 ENV PORT=8080
 RUN sed -i 's/80/${PORT}/g' /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf
+RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
 RUN a2enmod rewrite
 
 # Create the folder where the GCS bucket will be mounted
@@ -20,8 +21,15 @@ RUN mkdir -p /var/www/html/storage/database && \
 WORKDIR /var/www/html
 COPY . .
 
+# Install composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN composer install --no-dev --optimize-autoloader
+
+# Install Node.js and build assets
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y nodejs && \
+    npm install && \
+    npm run build
 
 # Final permission check
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
