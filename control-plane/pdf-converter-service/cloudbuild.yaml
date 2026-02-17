@@ -1,0 +1,67 @@
+# Cloud Build configuration for PDF Converter Service
+# This file enables automated builds and deployments
+
+steps:
+  # Build the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/pdf-converter-service:$COMMIT_SHA'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/pdf-converter-service:latest'
+      - '.'
+    dir: 'pdf-converter-service'
+
+  # Push the container image to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/pdf-converter-service:$COMMIT_SHA'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/pdf-converter-service:latest'
+
+  # Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'pdf-converter-service'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/pdf-converter-service:$COMMIT_SHA'
+      - '--region'
+      - 'us-central1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--memory'
+      - '2Gi'
+      - '--cpu'
+      - '2'
+      - '--timeout'
+      - '300'
+      - '--max-instances'
+      - '10'
+      - '--min-instances'
+      - '0'
+      - '--concurrency'
+      - '1'
+      - '--set-env-vars'
+      - 'GCP_PROJECT_ID=$PROJECT_ID,GCS_BUCKET=tensrgrid-raw-data,OUTPUT_FOLDER=tensrgrid/markdown-output'
+
+# Store images in Container Registry
+images:
+  - 'gcr.io/$PROJECT_ID/pdf-converter-service:$COMMIT_SHA'
+  - 'gcr.io/$PROJECT_ID/pdf-converter-service:latest'
+
+# Build timeout
+timeout: '1200s'
+
+# Build options
+options:
+  machineType: 'N1_HIGHCPU_8'
+  logging: CLOUD_LOGGING_ONLY

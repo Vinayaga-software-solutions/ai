@@ -1,0 +1,33 @@
+# Use Python 3.11 slim image
+FROM python:3.11-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies for PyMuPDF
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    libmupdf-dev \
+    mupdf-tools \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements first for better caching
+COPY requirements.txt .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
+COPY main.py .
+COPY pdf_processor.py .
+
+# Create necessary directories
+RUN mkdir -p /tmp/downloads /tmp/outputs
+
+# Set environment variables
+ENV PORT=8080
+ENV PYTHONUNBUFFERED=1
+
+# Run the application with gunicorn
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 300 main:app
